@@ -18,8 +18,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
-@Autonomous(name = "Red Close Auto")
-public class RedCloseAuto extends LinearOpMode {
+@Autonomous(name = "Red Far Auto")
+public class RedFarAuto extends LinearOpMode {
     // Define your robot's starting position
     private static final Pose2d zeroPose = new Pose2d(0, 0, 0);
     private static final Vector2d px = new Vector2d(20, 0);
@@ -44,23 +44,23 @@ public class RedCloseAuto extends LinearOpMode {
                 .waitSeconds(2)
 
                 .lineToYLinearHeading(-38,Math.toRadians(-90))
-                .splineTo(new Vector2d(48,-38),Math.toRadians(90))
+                .splineTo(new Vector2d(-48,-38),Math.toRadians(90))
 //                        .splineTo(new Vector2d(0,-35),Math.toRadians(-90))
 //                .splineTo(new Vector2d(Vector2d37.5,-25),Math.toRadians(0))
                 //do intake
                 .waitSeconds(2)
-                .splineTo(new Vector2d(45,-35),Math.toRadians(180))
+                .splineTo(new Vector2d(-45,-35),Math.toRadians(0))
                 .splineTo(new Vector2d(0,-35),Math.toRadians(90))
                 //wait ant put specimen onto the cage
                 .waitSeconds(2)
 
                 .lineToYLinearHeading(-38,Math.toRadians(-90))
-                .splineTo(new Vector2d(58,-38),Math.toRadians(90))
+                .splineTo(new Vector2d(-58,-38),Math.toRadians(90))
 //                        .splineTo(new Vector2d(0,-35),Math.toRadians(-90))
 //                .splineTo(new Vector2d(Vector2d37.5,-25),Math.toRadians(0))
                 //do intake
                 .waitSeconds(2)
-                .splineTo(new Vector2d(45,-35),Math.toRadians(180))
+                .splineTo(new Vector2d(-45,-35),Math.toRadians(0))
                 .splineTo(new Vector2d(0,-35),Math.toRadians(90))
                 //wait ant put specimen onto the cage
                 .waitSeconds(2);
