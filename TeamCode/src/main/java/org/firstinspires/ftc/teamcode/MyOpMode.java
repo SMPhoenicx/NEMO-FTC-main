@@ -63,7 +63,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Omni Linear OpMode-MINEE", group="Linear OpMode")
+@TeleOp(name="MainOpMode", group="Linear OpMode")
 
 public class MyOpMode extends LinearOpMode {
 
@@ -136,6 +136,8 @@ public class MyOpMode extends LinearOpMode {
         boolean lb2Pressed = false;
         boolean rb2Pressed = false;
         boolean b2Pressed = false;
+        boolean lb1Pressed = false;
+        boolean rb1Pressed = false;
 
         double doublePressStartTime = 0;
         double wristPosition = 0;
@@ -148,16 +150,22 @@ public class MyOpMode extends LinearOpMode {
         int prevPosition = armPositions[step];
         double integralError = 0.0;
 
-
+        double turnSpeed = 0.5;
+        double time = 0.0;
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             double max;
             double threshold=0.01;
-
+            lb1Pressed = gamepad1.left_bumper;
+            rb1Pressed = gamepad1.right_bumper;
+            if(lb1Pressed && rb1Pressed && (runtime.milliseconds() - time > 20)){
+                turnSpeed = turnSpeed == 0.5 ? 1.0:0.5;
+                time = runtime.milliseconds();
+            }
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
             double lateral =  gamepad1.left_stick_x;
-            double yaw     =  gamepad1.right_stick_x * 0.5;
+            double yaw     =  gamepad1.right_stick_x * turnSpeed;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -176,7 +184,7 @@ public class MyOpMode extends LinearOpMode {
             double wristPower = gamepad2.right_trigger - gamepad2.left_trigger;
             wristPosition += wristPower * wristSpeed * (runtime.seconds() - wristStartTime);
             wristStartTime = runtime.seconds();
-            wristPosition = Math.min(Math.max(0.5, wristPosition), 0.7);
+            wristPosition = Math.min(Math.max(0.4, wristPosition), 0.7);
 //            if(!gamepad2.left_bumper) {
 //                extPower /= 2;
 //            }
@@ -294,6 +302,7 @@ else{
             telemetry.addData("Wrist Position", "%4.2f", wristPosition);
             telemetry.addData("Ext Ticks", lext.getCurrentPosition());
             telemetry.addData("Pivot Ticks", lpivot.getCurrentPosition());
+            telemetry.addData("Turn Speed", turnSpeed);
             telemetry.update();
         }
     }}
