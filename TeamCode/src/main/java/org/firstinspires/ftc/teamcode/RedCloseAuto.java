@@ -44,26 +44,16 @@ public class RedCloseAuto extends LinearOpMode {
                 .waitSeconds(2)
 
                 .lineToYLinearHeading(-38,Math.toRadians(-90))
-                .splineTo(new Vector2d(48,-38),Math.toRadians(90))
-//                        .splineTo(new Vector2d(0,-35),Math.toRadians(-90))
-//                .splineTo(new Vector2d(Vector2d37.5,-25),Math.toRadians(0))
-                //do intake
-                .waitSeconds(2)
-                .splineTo(new Vector2d(45,-35),Math.toRadians(180))
-                .splineTo(new Vector2d(0,-35),Math.toRadians(90))
-                //wait ant put specimen onto the cage
-                .waitSeconds(2)
-
-                .lineToYLinearHeading(-38,Math.toRadians(-90))
-                .splineTo(new Vector2d(58,-38),Math.toRadians(90))
-//                        .splineTo(new Vector2d(0,-35),Math.toRadians(-90))
-//                .splineTo(new Vector2d(Vector2d37.5,-25),Math.toRadians(0))
-                //do intake
-                .waitSeconds(2)
-                .splineTo(new Vector2d(45,-35),Math.toRadians(180))
-                .splineTo(new Vector2d(0,-35),Math.toRadians(90))
-                //wait ant put specimen onto the cage
-                .waitSeconds(2);
+                .splineTo(new Vector2d(35,-38),Math.toRadians(90))
+                .splineTo(new Vector2d(35,-10),Math.toRadians(90))
+                .splineTo(new Vector2d(43,-10),Math.toRadians(-90))
+                .splineTo(new Vector2d(43,-55),Math.toRadians(-90))
+                .lineToYLinearHeading(-10, Math.toRadians(-90))
+                .splineTo(new Vector2d(56,-10),Math.toRadians(-90))
+                .splineTo(new Vector2d(56, -55), Math.toRadians(-90))
+                .lineToYLinearHeading(-10, Math.toRadians(90))
+                .splineTo(new Vector2d(65,-10),Math.toRadians(-90))
+                .splineTo(new Vector2d(65, -55), Math.toRadians(-90));
 
         waitForStart();
 
