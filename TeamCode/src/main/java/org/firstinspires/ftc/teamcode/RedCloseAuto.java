@@ -24,7 +24,7 @@ public class RedCloseAuto extends LinearOpMode {
     private static final Pose2d zeroPose = new Pose2d(0, 0, 0);
     private static final Vector2d px = new Vector2d(20, 0);
     private static final Vector2d py = new Vector2d(0, 20);
-    private static final Pose2d STARTING_POSE = new Pose2d(-36, -63, Math.toRadians(90));
+    private static final Pose2d STARTING_POSE = new Pose2d(23, -52, Math.toRadians(90));
 
     // Sample positions (adjust these based on your field measurements)
     private static final Vector2d SPECIMEN_DROP = new Vector2d(0, -36);
@@ -36,9 +36,9 @@ public class RedCloseAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumDrive drive = new MecanumDrive(hardwareMap, zeroPose);
+        MecanumDrive drive = new MecanumDrive(hardwareMap, STARTING_POSE);
 
-        TrajectoryActionBuilder autoSequence = drive.actionBuilder(new Pose2d(23, -52, Math.toRadians(90)))
+        TrajectoryActionBuilder autoSequence = drive.actionBuilder(STARTING_POSE)
                 .splineTo(new Vector2d(0,-35),Math.toRadians(90))
                 //wait ant put speciamskdfjas;dlfkja onto the cage
                 .waitSeconds(2)
