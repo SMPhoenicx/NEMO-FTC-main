@@ -24,7 +24,7 @@ public class RedFarAuto extends LinearOpMode {
     private static final Pose2d zeroPose = new Pose2d(0, 0, 0);
     private static final Vector2d px = new Vector2d(20, 0);
     private static final Vector2d py = new Vector2d(0, 20);
-    private static final Pose2d STARTING_POSE = new Pose2d(-23, -60, Math.toRadians(90));
+    private static final Pose2d STARTING_POSE = new Pose2d(-12, -60, Math.toRadians(90));
 
     // Sample positions (adjust these based on your field measurements)
     private static final Vector2d SPECIMEN_DROP = new Vector2d(0, -36);
@@ -39,29 +39,28 @@ public class RedFarAuto extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap, STARTING_POSE);
 
         TrajectoryActionBuilder autoSequence = drive.actionBuilder(STARTING_POSE)
-                .splineTo(new Vector2d(0,-35),Math.toRadians(90))
+                .splineTo(new Vector2d(-12,-35),Math.toRadians(90))
                 //wait ant put speciamskdfjas;dlfkja onto the cage
                 .waitSeconds(2)
 
-                .lineToYLinearHeading(-38,Math.toRadians(-90))
-                .splineTo(new Vector2d(-48,-38),Math.toRadians(90))
-//                        .splineTo(new Vector2d(0,-35),Math.toRadians(-90))
-//                .splineTo(new Vector2d(Vector2d37.5,-25),Math.toRadians(0))
+                .strafeTo(new Vector2d(-48,-38))
                 //do intake
                 .waitSeconds(2)
-                .splineTo(new Vector2d(-45,-35),Math.toRadians(0))
-                .splineTo(new Vector2d(0,-35),Math.toRadians(90))
+                .strafeTo(new Vector2d(-6,-35))
                 //wait ant put specimen onto the cage
                 .waitSeconds(2)
 
-                .lineToYLinearHeading(-38,Math.toRadians(-90))
-                .splineTo(new Vector2d(-58,-38),Math.toRadians(90))
-//                        .splineTo(new Vector2d(0,-35),Math.toRadians(-90))
-//                .splineTo(new Vector2d(Vector2d37.5,-25),Math.toRadians(0))
+                .strafeTo(new Vector2d(-58,-38))
                 //do intake
                 .waitSeconds(2)
-                .splineTo(new Vector2d(-45,-35),Math.toRadians(0))
-                .splineTo(new Vector2d(0,-35),Math.toRadians(90))
+                .strafeTo(new Vector2d(0,-35))
+                //wait ant put specimen onto the cage
+                .waitSeconds(2)
+
+                .strafeTo(new Vector2d(-64,-38))
+                //do intake
+                .waitSeconds(2)
+                .strafeTo(new Vector2d(6,-35))
                 //wait ant put specimen onto the cage
                 .waitSeconds(2);
 

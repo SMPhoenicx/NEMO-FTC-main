@@ -53,8 +53,47 @@ public class RedCloseAuto extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(new Vector2d(52,-10),Math.toRadians(90)),Math.toRadians(-90))
                 .splineToConstantHeading(new Vector2d(52, -45), Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(52,-10), Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(new Vector2d(60,-10),Math.toRadians(90)),Math.toRadians(-90))
-                .splineToConstantHeading(new Vector2d(60, -45), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(new Vector2d(58,-10),Math.toRadians(90)),Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(58, -45), Math.toRadians(90))
+//move to pick up second block
+
+                .splineTo(new Vector2d(56,-45), Math.toRadians(-90))
+
+                .waitSeconds(0.5)//intake
+
+
+
+                //move to drop off block w clip
+
+                .splineToSplineHeading(new Pose2d(50,-45,Math.toRadians(180)),Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(3,-35,Math.toRadians(90)),Math.toRadians(90))
+
+                .waitSeconds(0.5)//outtake
+
+
+
+//move to pick up third block
+
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(50,-45,Math.toRadians(-90)),Math.toRadians(-90))
+                .setReversed(false)
+
+                .waitSeconds(0.5)//intake
+
+
+
+//move to drop off block w clip
+
+                .splineToSplineHeading(new Pose2d(40,-45,Math.toRadians(180)),Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(3,-35,Math.toRadians(90)),Math.toRadians(90))
+
+                .waitSeconds(0.5)//outtake
+
+
+
+//park
+
+                .strafeTo(PARK_POS);
 
         waitForStart();
 
