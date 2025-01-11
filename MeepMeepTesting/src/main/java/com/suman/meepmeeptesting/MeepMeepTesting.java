@@ -41,30 +41,81 @@ public class MeepMeepTesting {
 
         //red
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-12, -60, Math.toRadians(90)))
-                .splineTo(new Vector2d(-12,-35),Math.toRadians(90))
-                //wait ant put speciamskdfjas;dlfkja onto the cage
-                .waitSeconds(2)
+                // Move to specimen drop
 
-                .strafeTo(new Vector2d(-48,-38))
-                //do intake
-                .waitSeconds(2)
-                .strafeTo(new Vector2d(-6,-35))
-                //wait ant put specimen onto the cage
-                .waitSeconds(2)
+                .strafeTo(SPECIMEN_DROP)
 
-                .strafeTo(new Vector2d(-58,-38))
-                //do intake
-                .waitSeconds(2)
-                .strafeTo(new Vector2d(0,-35))
-                //wait ant put specimen onto the cage
-                .waitSeconds(2)
+                .waitSeconds(0.5)//time for claw
 
-                .strafeTo(new Vector2d(-64,-38))
-                //do intake
-                .waitSeconds(2)
-                .strafeTo(new Vector2d(6,-35))
-                //wait ant put specimen onto the cage
-                .waitSeconds(2)
+
+
+                // Move to first sample
+
+                .strafeTo(SAMPLE_1)
+
+                .waitSeconds(0.5)  // Time for intake
+
+
+
+                // Move to bucket
+
+                .lineToYLinearHeading(-50, Math.toRadians(225))
+
+                .waitSeconds(0.5)  // Time for outtake
+
+
+
+                // Move to second sample
+
+                .turn(Math.toRadians(225))//turn this into .lineToLinearHeading(SAMPLE_2, Math.toRadians(225)
+
+                //I cant because .lineToLinearHeading isn't showing up for me
+
+                .strafeTo(SAMPLE_2)
+
+                .waitSeconds(0.5)  // Time for intake
+
+//
+
+                // Back to bucket
+
+                .strafeTo(BUCKET_POS)//turn this into .lineToLinearHeading(BUCKET_POS, Math.toRadians(225)
+
+                //I cant because .lineToLinearHeading isn't showing up for me
+
+                .turn(Math.toRadians(135))
+
+                .waitSeconds(0.5)  // Time for outtake
+
+
+
+                // Move to third sample
+
+                .turn(Math.toRadians(225))//turn this into .lineToLinearHeading(SAMPLE_3, Math.toRadians(225)
+
+                //I cant because .lineToLinearHeading isn't showing up for me
+
+                .strafeTo(SAMPLE_3)
+
+                .waitSeconds(0.5)  // Time for intake
+
+
+
+                // Back to bucket one last time
+
+                .strafeTo(BUCKET_POS)
+
+                .turn(Math.toRadians(135))
+
+                .waitSeconds(0.5)  // Time for outtake
+
+
+
+                // Park
+
+                .turn(Math.toRadians(225))
+
+                .strafeTo((new Vector2d(-36,-63)))
 
 
 //        //blue
