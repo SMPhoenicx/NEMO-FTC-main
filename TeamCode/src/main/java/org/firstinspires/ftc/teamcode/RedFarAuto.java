@@ -20,20 +20,29 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Config
 @Autonomous(name = "Red Far Auto")
 public class RedFarAuto extends LinearOpMode {
-    // Define your robot's starting position
     private static final Pose2d zeroPose = new Pose2d(0, 0, 0);
+
     private static final Vector2d px = new Vector2d(20, 0);
+
     private static final Vector2d py = new Vector2d(0, 20);
-    private static final Pose2d STARTING_POSE = new Pose2d(-12, -60, Math.toRadians(90));
+
+    private static final Pose2d STARTING_POSE = new Pose2d(-12, -63, Math.toRadians(90));
+
+
 
     // Sample positions (adjust these based on your field measurements)
-    private static final Vector2d SPECIMEN_DROP = new Vector2d(0, -36);
-    private static final Vector2d SAMPLE_1 = new Vector2d(24, -12);
-    private static final Vector2d SAMPLE_2 = new Vector2d(0, -12);
-    private static final Vector2d SAMPLE_3 = new Vector2d(-24, -12);
-    private static final Vector2d BUCKET_POS = new Vector2d(0, -48);
-    private static final Vector2d PARK_POS = new Vector2d(60, -12);
 
+    private static final Vector2d SPECIMEN_DROP = new Vector2d(-5, -36);
+
+    private static final Vector2d SAMPLE_1 = new Vector2d(-48, -40);
+
+    private static final Vector2d SAMPLE_2 = new Vector2d(-58, -40);
+
+    private static final Vector2d SAMPLE_3 = new Vector2d(-68, -40);
+
+    private static final Vector2d BUCKET_POS = new Vector2d(-48, -50);
+
+    private static final Vector2d PARK_POS = new Vector2d(60, -12);
     @Override
     public void runOpMode() throws InterruptedException {
         MecanumDrive drive = new MecanumDrive(hardwareMap, STARTING_POSE);
@@ -65,7 +74,7 @@ public class RedFarAuto extends LinearOpMode {
 
                 // Move to second sample
 
-                .turn(Math.toRadians(225))//turn this into .lineToLinearHeading(SAMPLE_2, Math.toRadians(225)
+                .turn(Math.toRadians(235))//turn this into .lineToLinearHeading(SAMPLE_2, Math.toRadians(225)
 
                 //I cant because .lineToLinearHeading isn't showing up for me
 
@@ -86,34 +95,11 @@ public class RedFarAuto extends LinearOpMode {
                 .waitSeconds(0.5)  // Time for outtake
 
 
-
-                // Move to third sample
-
-                .turn(Math.toRadians(225))//turn this into .lineToLinearHeading(SAMPLE_3, Math.toRadians(225)
-
-                //I cant because .lineToLinearHeading isn't showing up for me
-
-                .strafeTo(SAMPLE_3)
-
-                .waitSeconds(0.5)  // Time for intake
-
-
-
-                // Back to bucket one last time
-
-                .strafeTo(BUCKET_POS)
-
-                .turn(Math.toRadians(135))
-
-                .waitSeconds(0.5)  // Time for outtake
-
-
-
                 // Park
 
-                .turn(Math.toRadians(225))
-
-                .strafeTo((new Vector2d(-36,-63)));
+                .turn(Math.toRadians(235 ))
+                .strafeTo(new Vector2d(-40,0))
+                .strafeTo((new Vector2d(-20,0)));
 
         waitForStart();
 
