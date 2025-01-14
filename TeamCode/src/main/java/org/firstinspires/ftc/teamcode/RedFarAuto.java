@@ -72,13 +72,13 @@ public class RedFarAuto extends LinearOpMode {
 
 
 
-                // Move to second sample
-
-                .turn(Math.toRadians(235))//turn this into .lineToLinearHeading(SAMPLE_2, Math.toRadians(225)
+                // Move to second sample.
+                .strafeToLinearHeading(SAMPLE_2,Math.toRadians(90))
+                //.turn(Math.toRadians(225))//turn this into .lineToLinearHeading(SAMPLE_2, Math.toRadians(225)
 
                 //I cant because .lineToLinearHeading isn't showing up for me
 
-                .strafeTo(SAMPLE_2)
+                //.strafeTo(SAMPLE_2)
 
                 .waitSeconds(0.5)  // Time for intake
 
@@ -86,20 +86,44 @@ public class RedFarAuto extends LinearOpMode {
 
                 // Back to bucket
 
-                .strafeTo(BUCKET_POS)//turn this into .lineToLinearHeading(BUCKET_POS, Math.toRadians(225)
+                .strafeToLinearHeading(BUCKET_POS, Math.toRadians(225))//turn this into .lineToLinearHeading(BUCKET_POS, Math.toRadians(225)
 
                 //I cant because .lineToLinearHeading isn't showing up for me
 
-                .turn(Math.toRadians(135))
+                //.turn(Math.toRadians(135))
 
                 .waitSeconds(0.5)  // Time for outtake
 
 
+
+                // Move to third sample
+
+                .strafeToLinearHeading(SAMPLE_3,Math.toRadians(90))
+                //.turn(Math.toRadians(225))//turn this into .lineToLinearHeading(SAMPLE_3, Math.toRadians(225)
+
+                //I cant because .lineToLinearHeading isn't showing up for me
+
+                //.strafeTo(SAMPLE_3)
+
+                .waitSeconds(0.5)  // Time for intake
+
+
+
+                // Back to bucket one last time
+
+                .strafeToLinearHeading(BUCKET_POS,Math.toRadians(225))
+
+                //.turn(Math.toRadians(135))
+
+                .waitSeconds(0.5)  // Time for outtake
+
+
+
                 // Park
 
-                .turn(Math.toRadians(235 ))
-                .strafeTo(new Vector2d(-40,0))
-                .strafeTo((new Vector2d(-20,0)));
+                //.turn(Math.toRadians(225))
+
+                .strafeToLinearHeading(new Vector2d(-36,-63),Math.toRadians(90));
 
         waitForStart();
 

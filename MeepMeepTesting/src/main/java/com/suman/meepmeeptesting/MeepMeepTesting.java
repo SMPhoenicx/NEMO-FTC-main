@@ -65,13 +65,13 @@ public class MeepMeepTesting {
 
 
 
-                // Move to second sample
-
-                .turn(Math.toRadians(225))//turn this into .lineToLinearHeading(SAMPLE_2, Math.toRadians(225)
+                // Move to second sample.
+                .strafeToLinearHeading(SAMPLE_2,Math.toRadians(90))
+                //.turn(Math.toRadians(225))//turn this into .lineToLinearHeading(SAMPLE_2, Math.toRadians(225)
 
                 //I cant because .lineToLinearHeading isn't showing up for me
 
-                .strafeTo(SAMPLE_2)
+                //.strafeTo(SAMPLE_2)
 
                 .waitSeconds(0.5)  // Time for intake
 
@@ -79,11 +79,11 @@ public class MeepMeepTesting {
 
                 // Back to bucket
 
-                .strafeTo(BUCKET_POS)//turn this into .lineToLinearHeading(BUCKET_POS, Math.toRadians(225)
+                .strafeToLinearHeading(BUCKET_POS, Math.toRadians(225))//turn this into .lineToLinearHeading(BUCKET_POS, Math.toRadians(225)
 
                 //I cant because .lineToLinearHeading isn't showing up for me
 
-                .turn(Math.toRadians(135))
+                //.turn(Math.toRadians(135))
 
                 .waitSeconds(0.5)  // Time for outtake
 
@@ -91,11 +91,12 @@ public class MeepMeepTesting {
 
                 // Move to third sample
 
-                .turn(Math.toRadians(225))//turn this into .lineToLinearHeading(SAMPLE_3, Math.toRadians(225)
+                .strafeToLinearHeading(SAMPLE_3,Math.toRadians(90))
+                //.turn(Math.toRadians(225))//turn this into .lineToLinearHeading(SAMPLE_3, Math.toRadians(225)
 
                 //I cant because .lineToLinearHeading isn't showing up for me
 
-                .strafeTo(SAMPLE_3)
+                //.strafeTo(SAMPLE_3)
 
                 .waitSeconds(0.5)  // Time for intake
 
@@ -103,9 +104,9 @@ public class MeepMeepTesting {
 
                 // Back to bucket one last time
 
-                .strafeTo(BUCKET_POS)
+                .strafeToLinearHeading(BUCKET_POS,Math.toRadians(225))
 
-                .turn(Math.toRadians(135))
+                //.turn(Math.toRadians(135))
 
                 .waitSeconds(0.5)  // Time for outtake
 
@@ -113,9 +114,9 @@ public class MeepMeepTesting {
 
                 // Park
 
-                .turn(Math.toRadians(225))
+                //.turn(Math.toRadians(225))
 
-                .strafeTo((new Vector2d(-36,-63)))
+                .strafeToLinearHeading(new Vector2d(-36,-63),Math.toRadians(90))
 
 
 //        //blue
