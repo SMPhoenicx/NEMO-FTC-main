@@ -34,11 +34,11 @@ public class RedFarAuto extends LinearOpMode {
 
     private static final Vector2d SPECIMEN_DROP = new Vector2d(-5, -36);
 
-    private static final Vector2d SAMPLE_1 = new Vector2d(-48, -40);
+    private static final Vector2d SAMPLE_1 = new Vector2d(-48, -43);
 
-    private static final Vector2d SAMPLE_2 = new Vector2d(-58, -40);
+    private static final Vector2d SAMPLE_2 = new Vector2d(-58, -43);
 
-    private static final Vector2d SAMPLE_3 = new Vector2d(-68, -40);
+    private static final Vector2d SAMPLE_3 = new Vector2d(-68, -43);
 
     private static final Vector2d BUCKET_POS = new Vector2d(-48, -50);
 

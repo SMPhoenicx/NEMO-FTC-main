@@ -10,6 +10,8 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
@@ -17,8 +19,25 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+// RR-specific imports
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
+
+// Non-RR imports
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+
 @Config
-@Autonomous(name = "Sample Collection Auto")
+@Autonomous(name = "Sample Specimen Auto")
 public class PrototypePlaceAuto extends LinearOpMode {
     // Define your robot's starting position
     private static final Pose2d zeroPose = new Pose2d(0, 0, 0);
@@ -34,12 +53,39 @@ public class PrototypePlaceAuto extends LinearOpMode {
     private static final Vector2d BUCKET_POS = new Vector2d(0, -48);
     private static final Vector2d PARK_POS = new Vector2d(60, -12);
 
+    // Initializing motors for lift and intake
+    private DcMotor rext = null;//ext are extension
+    private DcMotor lext = null;
+    private DcMotor rpivot = null; //pivot arm up and down
+    private DcMotor lpivot = null;
+    private CRServo servo1 = null; //intake
+    private CRServo servo2 = null;
+    private Servo sWrist = null; //wrist joint
+
     @Override
     public void runOpMode() throws InterruptedException {
         MecanumDrive drive = new MecanumDrive(hardwareMap, zeroPose);
+        rext = hardwareMap.get(DcMotor.class, "rext");
+        lext = hardwareMap.get(DcMotor.class, "lext");
+        rpivot = hardwareMap.get(DcMotor.class, "rpivot");
+        lpivot = hardwareMap.get(DcMotor.class, "lpivot");
+        servo1 = hardwareMap.get(CRServo.class, "s1");
+        servo2 = hardwareMap.get(CRServo.class, "s2");
+        sWrist = hardwareMap.get(Servo.class, "sWrist");
 
-        // TODO: Initialize your intake system
-        // TODO: Initialize your lift system
+        rext.setDirection(DcMotor.Direction.FORWARD);
+        lext.setDirection(DcMotor.Direction.REVERSE);
+        rpivot.setDirection(DcMotor.Direction.FORWARD);
+        lpivot.setDirection(DcMotor.Direction.FORWARD);
+        servo1.setDirection(DcMotorSimple.Direction.FORWARD);
+        servo2.setDirection(DcMotorSimple.Direction.FORWARD);
+        sWrist.setDirection(Servo.Direction.FORWARD);
+        sWrist.setPosition(0.5);
+
+        lext.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Reset the motor encoder
+        lext.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // Turn the motor back on when we are done
+        lpivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Reset the motor encoder
+        lpivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // Turn the motor back on when we are done
 
         // Build the entire action sequence
         TrajectoryActionBuilder testSequence = drive.actionBuilder(zeroPose)
@@ -48,6 +94,7 @@ public class PrototypePlaceAuto extends LinearOpMode {
                 .strafeTo(py)
                 .waitSeconds(1)
                 .turn(Math.toRadians(90));
+
         TrajectoryActionBuilder autoSequence = drive.actionBuilder(STARTING_POSE)
                 // Move to specimen drop
                 .strafeTo(SPECIMEN_DROP)
