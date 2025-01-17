@@ -81,7 +81,6 @@ public class PrototypePlaceAuto extends LinearOpMode {
         servo2.setDirection(DcMotorSimple.Direction.FORWARD);
         sWrist.setDirection(Servo.Direction.FORWARD);
         sWrist.setPosition(0.5);
-
         lext.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Reset the motor encoder
         lext.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // Turn the motor back on when we are done
         lpivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Reset the motor encoder

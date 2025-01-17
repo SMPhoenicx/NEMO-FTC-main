@@ -10,6 +10,19 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
@@ -20,7 +33,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Config
 @Autonomous(name = "Red Far Auto")
 public class RedFarAuto extends LinearOpMode {
-    private static final Pose2d zeroPose = new Pose2d(0, 0, 0);
+        private static final Pose2d zeroPose = new Pose2d(0, 0, 0);
 
     private static final Vector2d px = new Vector2d(20, 0);
 
@@ -34,26 +47,48 @@ public class RedFarAuto extends LinearOpMode {
 
     private static final Vector2d SPECIMEN_DROP = new Vector2d(-5, -36);
 
-    private static final Vector2d SAMPLE_1 = new Vector2d(-48, -43);
+    private static final Vector2d SAMPLE_1 = new Vector2d(-48, -40);
 
-    private static final Vector2d SAMPLE_2 = new Vector2d(-58, -43);
+    private static final Vector2d SAMPLE_2 = new Vector2d(-58, -40);
 
-    private static final Vector2d SAMPLE_3 = new Vector2d(-68, -43);
+    private static final Vector2d SAMPLE_3 = new Vector2d(-68, -40);
 
     private static final Vector2d BUCKET_POS = new Vector2d(-48, -50);
 
     private static final Vector2d PARK_POS = new Vector2d(60, -12);
+
+    private DcMotor rext = null;//ext are extension
+    private DcMotor lext = null;
+    private DcMotor rpivot = null; //pivot arm up and down
+    private DcMotor lpivot = null;
+    private CRServo servo1 = null; //intake
+    private CRServo servo2 = null;
+    private Servo sWrist = null; //wrist joint
+
+
     @Override
     public void runOpMode() throws InterruptedException {
+        rext = hardwareMap.get(DcMotor.class, "rext");
+        lext = hardwareMap.get(DcMotor.class, "lext");
+        rpivot = hardwareMap.get(DcMotor.class, "rpivot");
+        lpivot = hardwareMap.get(DcMotor.class, "lpivot");
+        servo1 = hardwareMap.get(CRServo.class, "s1");
+        servo2 = hardwareMap.get(CRServo.class, "s2");
+        sWrist = hardwareMap.get(Servo.class, "sWrist");
+
+        Lift lift = new Lift(hardwareMap);
+        Pivot pivot = new Pivot(hardwareMap);
+        Intake intake = new Intake(hardwareMap);
         MecanumDrive drive = new MecanumDrive(hardwareMap, STARTING_POSE);
 
         TrajectoryActionBuilder autoSequence = drive.actionBuilder(STARTING_POSE)
-                // Move to specimen drop
-
+//
+//
+//                 Move to specimen dro//
                 .strafeTo(SPECIMEN_DROP)
 
-                .waitSeconds(0.5)//time for claw
 
+                .waitSeconds(0.5)//time for claw
 
 
                 // Move to first sample
@@ -63,7 +98,6 @@ public class RedFarAuto extends LinearOpMode {
                 .waitSeconds(0.5)  // Time for intake
 
 
-
                 // Move to bucket
 
                 .lineToYLinearHeading(-50, Math.toRadians(225))
@@ -71,9 +105,8 @@ public class RedFarAuto extends LinearOpMode {
                 .waitSeconds(0.5)  // Time for outtake
 
 
-
                 // Move to second sample.
-                .strafeToLinearHeading(SAMPLE_2,Math.toRadians(90))
+                .strafeToLinearHeading(SAMPLE_2, Math.toRadians(90))
                 //.turn(Math.toRadians(225))//turn this into .lineToLinearHeading(SAMPLE_2, Math.toRadians(225)
 
                 //I cant because .lineToLinearHeading isn't showing up for me
@@ -82,7 +115,7 @@ public class RedFarAuto extends LinearOpMode {
 
                 .waitSeconds(0.5)  // Time for intake
 
-//
+                //
 
                 // Back to bucket
 
@@ -95,10 +128,9 @@ public class RedFarAuto extends LinearOpMode {
                 .waitSeconds(0.5)  // Time for outtake
 
 
-
                 // Move to third sample
 
-                .strafeToLinearHeading(SAMPLE_3,Math.toRadians(90))
+                .strafeToLinearHeading(SAMPLE_3, Math.toRadians(90))
                 //.turn(Math.toRadians(225))//turn this into .lineToLinearHeading(SAMPLE_3, Math.toRadians(225)
 
                 //I cant because .lineToLinearHeading isn't showing up for me
@@ -108,23 +140,20 @@ public class RedFarAuto extends LinearOpMode {
                 .waitSeconds(0.5)  // Time for intake
 
 
-
                 // Back to bucket one last time
 
-                .strafeToLinearHeading(BUCKET_POS,Math.toRadians(225))
+                .strafeToLinearHeading(BUCKET_POS, Math.toRadians(225))
 
                 //.turn(Math.toRadians(135))
 
                 .waitSeconds(0.5)  // Time for outtake
 
 
-
                 // Park
 
                 //.turn(Math.toRadians(225))
 
-                .strafeToLinearHeading(new Vector2d(-36,-63),Math.toRadians(90));
-
+                .strafeToLinearHeading(new Vector2d(-36, -63), Math.toRadians(90));
         waitForStart();
 
         if (isStopRequested()) return;
@@ -133,10 +162,202 @@ public class RedFarAuto extends LinearOpMode {
         //Actions.runBlocking(autoSequence);
         Actions.runBlocking(
                 new SequentialAction(
-                        autoSequence.build()
+                        lift.liftUp(),
+                        lift.liftDown(),
+                        pivot.pivotUp(),
+                        pivot.pivotDown()
+                        //autoSequence.build()
                 )
         );
         // Throughout the sequence, you'll need to add your intake/lift controls
         // at the appropriate times
     }
+    public class Lift {
+
+        public Lift(HardwareMap hardwareMap) {
+
+            rext.setDirection(DcMotor.Direction.FORWARD);
+            lext.setDirection(DcMotor.Direction.REVERSE);
+
+            lext.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Reset the motor encoder
+            lext.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // Turn the motor back on when we are done
+        }
+
+        public class LiftUp implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    rext.setPower(-1);
+                    lext.setPower(-1);
+                    initialized = true;
+                }
+                double pos = lext.getCurrentPosition();
+                packet.put("liftPos", pos);
+                if (pos > -2000.0) {
+                    return true;
+                } else {
+                    rext.setPower(0);
+                    lext.setPower(0);
+                    return false;
+                }
+            }
+        }
+
+        public class LiftDown implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    rext.setPower(1);
+                    lext.setPower(1);
+                    initialized = true;
+                }
+                double pos = lext.getCurrentPosition();
+                packet.put("liftPos", pos);
+                if (pos < 500) {
+                    return true;
+                } else {
+                    rext.setPower(0);
+                    lext.setPower(0);
+                    return false;
+                }
+            }
+        }
+
+        public Action liftUp() {
+            return new LiftUp();
+        }
+
+        public Action liftDown() {
+            return new LiftDown();
+        }
+    }
+    public class Pivot {
+
+        public Pivot(HardwareMap hardwareMap) {
+
+            rpivot.setDirection(DcMotor.Direction.FORWARD);
+            lpivot.setDirection(DcMotor.Direction.FORWARD);
+
+            lpivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Reset the motor encoder
+            lpivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // Turn the motor back on when we are done
+        }
+
+        public class PivotUp implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    rpivot.setPower(0.5);
+                    lpivot.setPower(0.5);
+                    initialized = true;
+                }
+                double pos = lpivot.getCurrentPosition();
+                packet.put("pivotPos", pos);
+                if (pos < 500) {
+                    return true;
+                } else {
+                    rpivot.setPower(0);
+                    lpivot.setPower(0);
+                    return false;
+                }
+            }
+        }
+
+        public class PivotDown implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    rpivot.setPower(-0.5);
+                    lpivot.setPower(-0.5);
+                    initialized = true;
+                }
+                double pos = lpivot.getCurrentPosition();
+                packet.put("pivotPos", pos);
+                if (pos > 50) {
+                    return true;
+                } else {
+                    rpivot.setPower(0);
+                    lpivot.setPower(0);
+                    return false;
+                }
+            }
+        }
+
+        public Action pivotUp() {
+            return new PivotUp();
+        }
+
+        public Action pivotDown() {
+            return new PivotDown();
+        }
+    }
+    public class Intake {//dont know how to implement intake on and off, probably like.wait but doesn twokr
+        //unless in the runOpMode soooo idk
+
+        public Intake(HardwareMap hardwareMap) {
+
+            servo1.setDirection(DcMotorSimple.Direction.FORWARD);
+            servo2.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
+
+        public class IntakeUp implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    servo1.setPower(0.5);
+                    servo1.setPower(0.5);
+                    initialized = true;
+                }
+                double pos = servo1.getCurrentPosition();
+                packet.put("pivotPos", pos);
+                if (pos < 500) {
+                    return true;
+                } else {
+                    servo1.setPower(0);
+                    servo2.setPower(0);
+                    return false;
+                }
+            }
+        }
+
+        public class IntakeDown implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    servo1.setPower(-0.5);
+                    servo2.setPower(-0.5);
+                    initialized = true;
+                }
+                double pos = servo1.getCurrentPosition();
+                packet.put("pivotPos", pos);
+                if (pos > 50) {
+                    return true;
+                } else {
+                    servo1.setPower(0);
+                    servo2.setPower(0);
+                    return false;
+                }
+            }
+        }
+
+        public Action intakeUp() {
+            return new IntakeUp();
+        }
+
+        public Action intakeDown() {
+            return new IntakeDown();
+        }
+    }
+
 }
