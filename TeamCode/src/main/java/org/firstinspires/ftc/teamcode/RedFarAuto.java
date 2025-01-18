@@ -3,6 +3,7 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
@@ -39,13 +40,13 @@ public class RedFarAuto extends LinearOpMode {
 
     private static final Vector2d py = new Vector2d(0, 20);
 
-    private static final Pose2d STARTING_POSE = new Pose2d(-12, -63, Math.toRadians(90));
+    private static final Pose2d STARTING_POSE = new Pose2d(-12, -60, Math.toRadians(90));
 
 
 
     // Sample positions (adjust these based on your field measurements)
 
-    private static final Vector2d SPECIMEN_DROP = new Vector2d(-5, -36);
+    private static final Vector2d SPECIMEN_DROP = new Vector2d(-9, -28);
 
     private static final Vector2d SAMPLE_1 = new Vector2d(-48, -40);
 
@@ -65,6 +66,10 @@ public class RedFarAuto extends LinearOpMode {
     private CRServo servo2 = null;
     private Servo sWrist = null; //wrist joint
 
+    private static final int liftMax=1000;
+    private static final int liftMin=-2900;
+    private static final int pivotMax=1000;
+    private static final int pivotMin=800;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -75,6 +80,7 @@ public class RedFarAuto extends LinearOpMode {
         servo1 = hardwareMap.get(CRServo.class, "s1");
         servo2 = hardwareMap.get(CRServo.class, "s2");
         sWrist = hardwareMap.get(Servo.class, "sWrist");
+        sWrist.setPosition(0);
 
         Lift lift = new Lift(hardwareMap);
         Pivot pivot = new Pivot(hardwareMap);
@@ -89,6 +95,9 @@ public class RedFarAuto extends LinearOpMode {
 
 
                 .waitSeconds(0.5)//time for claw
+                .stopAndAdd(pivot.pivotDown())
+                .stopAndAdd(lift.liftDown())
+                .stopAndAdd(intake.intakeDown())
 
 
                 // Move to first sample
@@ -96,7 +105,10 @@ public class RedFarAuto extends LinearOpMode {
                 .strafeTo(SAMPLE_1)
 
                 .waitSeconds(0.5)  // Time for intake
-
+                .afterTime(.1,lift.liftUp())
+                .afterTime(.1,lift.liftDown())
+                .afterTime(.1,pivot.pivotUp())
+                .afterTime(.1,pivot.pivotDown())
 
                 // Move to bucket
 
@@ -161,12 +173,15 @@ public class RedFarAuto extends LinearOpMode {
         // TODO: Set lift to specimen height
         //Actions.runBlocking(autoSequence);
         Actions.runBlocking(
-                new SequentialAction(
-                        lift.liftUp(),
-                        lift.liftDown(),
+                new ParallelAction(
                         pivot.pivotUp(),
-                        pivot.pivotDown()
-                        //autoSequence.build()
+                        lift.liftUp(),
+                        intake.intakeUp(),
+                        //lift.liftDown(),
+                        //pivot.pivotDown(),
+                        //intake.intakeDown(),
+                        //intake.intakeUp()
+                        autoSequence.build()
                 )
         );
         // Throughout the sequence, you'll need to add your intake/lift controls
@@ -189,13 +204,13 @@ public class RedFarAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    rext.setPower(-1);
-                    lext.setPower(-1);
+                    rext.setPower(-.5);
+                    lext.setPower(-.5);
                     initialized = true;
                 }
                 double pos = lext.getCurrentPosition();
-                packet.put("liftPos", pos);
-                if (pos > -2000.0) {
+                packet.put("liftPos",pos);
+                if (pos > liftMin) {
                     return true;
                 } else {
                     rext.setPower(0);
@@ -216,8 +231,8 @@ public class RedFarAuto extends LinearOpMode {
                     initialized = true;
                 }
                 double pos = lext.getCurrentPosition();
-                packet.put("liftPos", pos);
-                if (pos < 500) {
+                packet.put("liftPos",pos);
+                if (pos < liftMax) {
                     return true;
                 } else {
                     rext.setPower(0);
@@ -258,7 +273,7 @@ public class RedFarAuto extends LinearOpMode {
                 }
                 double pos = lpivot.getCurrentPosition();
                 packet.put("pivotPos", pos);
-                if (pos < 500) {
+                if (pos < pivotMax) {
                     return true;
                 } else {
                     rpivot.setPower(0);
@@ -280,7 +295,7 @@ public class RedFarAuto extends LinearOpMode {
                 }
                 double pos = lpivot.getCurrentPosition();
                 packet.put("pivotPos", pos);
-                if (pos > 50) {
+                if (pos > pivotMin) {
                     return true;
                 } else {
                     rpivot.setPower(0);
@@ -304,7 +319,7 @@ public class RedFarAuto extends LinearOpMode {
         public Intake(HardwareMap hardwareMap) {
 
             servo1.setDirection(DcMotorSimple.Direction.FORWARD);
-            servo2.setDirection(DcMotorSimple.Direction.FORWARD);
+            servo2.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
         public class IntakeUp implements Action {
@@ -314,12 +329,11 @@ public class RedFarAuto extends LinearOpMode {
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
                     servo1.setPower(0.5);
-                    servo1.setPower(0.5);
+                    servo2.setPower(0.5);
                     initialized = true;
+                    resetRuntime();
                 }
-                double pos = servo1.getCurrentPosition();
-                packet.put("pivotPos", pos);
-                if (pos < 500) {
+                if (getRuntime() < 1) {
                     return true;
                 } else {
                     servo1.setPower(0);
@@ -335,13 +349,12 @@ public class RedFarAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    servo1.setPower(-0.5);
-                    servo2.setPower(-0.5);
+                    servo1.setPower(-1);
+                    servo2.setPower(-1);
                     initialized = true;
+                    resetRuntime();
                 }
-                double pos = servo1.getCurrentPosition();
-                packet.put("pivotPos", pos);
-                if (pos > 50) {
+                if (getRuntime() < 1) {
                     return true;
                 } else {
                     servo1.setPower(0);
