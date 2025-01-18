@@ -76,7 +76,7 @@ public class RedCloseAuto extends LinearOpMode {
                 .waitSeconds(2)
                 .stopAndAdd(pivot.pivotDown())
                 .stopAndAdd(lift.liftDown())
-                .stopAndAdd(intake.intakeDown())P
+                .stopAndAdd(intake.intakeDown())
 
                 .strafeTo(new Vector2d(30,-35))
                 //.splineToSplineHeading(new Pose2d(0,-36,Math.toRadians(0)),Math.toRadians(0))
