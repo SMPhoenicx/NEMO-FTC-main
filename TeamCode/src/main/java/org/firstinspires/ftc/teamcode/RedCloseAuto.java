@@ -126,6 +126,7 @@ public class RedCloseAuto extends LinearOpMode {
 
         TrajectoryActionBuilder park = drive.actionBuilder(SPECIMEN_DROP)
 
+                .waitSeconds(5)
                 .strafeTo(new Vector2d(9,-55))
 
                 .strafeTo(PARK_POS);
@@ -151,7 +152,8 @@ public class RedCloseAuto extends LinearOpMode {
                         //pivot.pivotDown(),
                         //intake.intakeDown(),
                         //intake.intakeUp()
-                        placeSpecimen.build()
+                        placeSpecimen.build(),
+                        park.build()
                 )
         );
         Actions.runBlocking(new SequentialAction(//push samples afterward
