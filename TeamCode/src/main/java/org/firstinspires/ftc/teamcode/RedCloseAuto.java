@@ -124,7 +124,7 @@ public class RedCloseAuto extends LinearOpMode {
                 .stopAndAdd(intake.intakeDown());
                 //.stopAndAdd(pushSamples.build());
 
-        TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(new Vector2d(9,-27)))
+        TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(new Vector2d(9,-27),Math.toRadians(90)))
                         .strafeTo(new Vector2d(9,-48));
 
 
