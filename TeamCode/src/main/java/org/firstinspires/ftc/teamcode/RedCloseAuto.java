@@ -33,12 +33,12 @@ public class RedCloseAuto extends LinearOpMode {
     private static final Pose2d STARTING_POSE = new Pose2d(12, -60, Math.toRadians(90));
 
     // Sample positions (adjust these based on your field measurements)
-    private static final Vector2d SPECIMEN_DROP = new Vector2d(9, -27);
+    private static final Pose2d SPECIMEN_DROP = new Pose2d(9, -27,Math.toRadians(90));
     private static final Vector2d SAMPLE_1 = new Vector2d(24, -12);
     private static final Vector2d SAMPLE_2 = new Vector2d(0, -12);
     private static final Vector2d SAMPLE_3 = new Vector2d(-24, -12);
     private static final Vector2d BUCKET_POS = new Vector2d(0, -48);
-    private static final Vector2d PARK_POS = new Vector2d(60, -12);
+    private static final Vector2d PARK_POS = new Vector2d(55, -55);
     private DcMotor rext = null;//ext are extension
     private DcMotor lext = null;
     private DcMotor rpivot = null; //pivot arm up and down
@@ -69,7 +69,7 @@ public class RedCloseAuto extends LinearOpMode {
         Intake intake = new Intake(hardwareMap);
         MecanumDrive drive = new MecanumDrive(hardwareMap, STARTING_POSE);
 
-        TrajectoryActionBuilder pushSamples = drive.actionBuilder(new Pose2d(SPECIMEN_DROP, Math.toRadians(90)))
+        TrajectoryActionBuilder pushSamples = drive.actionBuilder(SPECIMEN_DROP)
                 .strafeTo(new Vector2d(30,-35))
                 //.splineToSplineHeading(new Pose2d(0,-36,Math.toRadians(0)),Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(36,-10),Math.toRadians(90))
@@ -116,7 +116,7 @@ public class RedCloseAuto extends LinearOpMode {
                 .strafeTo(PARK_POS);
 
         TrajectoryActionBuilder placeSpecimen = drive.actionBuilder(STARTING_POSE)
-                .strafeTo(SPECIMEN_DROP)
+                .strafeTo(SPECIMEN_DROP.position)
                 //wait ant put speciamskdfjas;dlfkja onto the cage
                 .waitSeconds(2)
                 .stopAndAdd(pivot.pivotDown())
@@ -124,8 +124,11 @@ public class RedCloseAuto extends LinearOpMode {
                 .stopAndAdd(intake.intakeDown());
                 //.stopAndAdd(pushSamples.build());
 
-        TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(new Vector2d(9,-27),Math.toRadians(90)))
-                        .strafeTo(new Vector2d(9,-48));
+        TrajectoryActionBuilder park = drive.actionBuilder(SPECIMEN_DROP)
+
+                .strafeTo(new Vector2d(9,-55))
+
+                .strafeTo(PARK_POS);
 
 
         waitForStart();
