@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -32,7 +33,7 @@ public class RedCloseAuto extends LinearOpMode {
     private static final Pose2d STARTING_POSE = new Pose2d(12, -60, Math.toRadians(90));
 
     // Sample positions (adjust these based on your field measurements)
-    private static final Vector2d SPECIMEN_DROP = new Vector2d(9, -28);
+    private static final Vector2d SPECIMEN_DROP = new Vector2d(9, -27);
     private static final Vector2d SAMPLE_1 = new Vector2d(24, -12);
     private static final Vector2d SAMPLE_2 = new Vector2d(0, -12);
     private static final Vector2d SAMPLE_3 = new Vector2d(-24, -12);
@@ -48,7 +49,7 @@ public class RedCloseAuto extends LinearOpMode {
 
     private static final int liftMax=1000;
     private static final int liftMin=-2900;
-    private static final int pivotMax=1000;
+    private static final int pivotMax=1100;
     private static final int pivotMin=800;
 
 
@@ -68,16 +69,7 @@ public class RedCloseAuto extends LinearOpMode {
         Intake intake = new Intake(hardwareMap);
         MecanumDrive drive = new MecanumDrive(hardwareMap, STARTING_POSE);
 
-
-
-        TrajectoryActionBuilder autoSequence = drive.actionBuilder(STARTING_POSE)
-                .strafeTo(SPECIMEN_DROP)
-                //wait ant put speciamskdfjas;dlfkja onto the cage
-                .waitSeconds(2)
-                .stopAndAdd(pivot.pivotDown())
-                .stopAndAdd(lift.liftDown())
-                .stopAndAdd(intake.intakeDown())
-
+        TrajectoryActionBuilder pushSamples = drive.actionBuilder(new Pose2d(SPECIMEN_DROP, Math.toRadians(90)))
                 .strafeTo(new Vector2d(30,-35))
                 //.splineToSplineHeading(new Pose2d(0,-36,Math.toRadians(0)),Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(36,-10),Math.toRadians(90))
@@ -90,19 +82,14 @@ public class RedCloseAuto extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(52,-10), Math.toRadians(90))
                 .splineToLinearHeading(new Pose2d(new Vector2d(58,-10),Math.toRadians(90)),Math.toRadians(-90))
                 .splineToConstantHeading(new Vector2d(58, -45), Math.toRadians(90))
-//move to pick up second block
 
+                //move to pick up second block
                 .splineTo(new Vector2d(56,-45), Math.toRadians(-90))
-
                 .waitSeconds(0.5)//intake
 
-
-
                 //move to drop off block w clip
-
                 .splineToSplineHeading(new Pose2d(50,-45,Math.toRadians(180)),Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(3,-35,Math.toRadians(90)),Math.toRadians(90))
-
                 .waitSeconds(0.5)//outtake
 
 
@@ -124,11 +111,22 @@ public class RedCloseAuto extends LinearOpMode {
 
                 .waitSeconds(0.5)//outtake
 
-
-
 //park
 
                 .strafeTo(PARK_POS);
+
+        TrajectoryActionBuilder placeSpecimen = drive.actionBuilder(STARTING_POSE)
+                .strafeTo(SPECIMEN_DROP)
+                //wait ant put speciamskdfjas;dlfkja onto the cage
+                .waitSeconds(2)
+                .stopAndAdd(pivot.pivotDown())
+                .stopAndAdd(lift.liftDown())
+                .stopAndAdd(intake.intakeDown());
+                //.stopAndAdd(pushSamples.build());
+
+        TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(new Vector2d(9,-27)))
+                        .strafeTo(new Vector2d(9,-48))
+
 
         waitForStart();
 
@@ -141,22 +139,22 @@ public class RedCloseAuto extends LinearOpMode {
                         autoSequence.build()
                 )
         );**/
-        // Throughout the sequence, you'll need to add your intake/lift controls
-        // at the appropriate times
-        Actions.runBlocking(
+        Actions.runBlocking(//lift arm and move to specimen at same time
                 new ParallelAction(
                         pivot.pivotUp(),
                         lift.liftUp(),
-                        intake.intakeUp(),
+                        //intake.intakeUp(),
                         //lift.liftDown(),
                         //pivot.pivotDown(),
                         //intake.intakeDown(),
                         //intake.intakeUp()
-                        autoSequence.build()
+                        placeSpecimen.build()
                 )
         );
-        // Throughout the sequence, you'll need to add your intake/lift controls
-        // at the appropriate times
+        Actions.runBlocking(new SequentialAction(//push samples afterward
+
+                pushSamples.build()
+        ));
     }
     public class Lift {
 
