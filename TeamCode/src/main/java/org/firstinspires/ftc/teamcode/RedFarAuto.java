@@ -46,7 +46,7 @@ public class RedFarAuto extends LinearOpMode {
 
     // Sample positions (adjust these based on your field measurements)
 
-    private static final Vector2d SPECIMEN_DROP = new Vector2d(-9, -28);
+    private static final Pose2d SPECIMEN_DROP = new Pose2d(-9, -28,Math.toRadians(90));
 
     private static final Vector2d SAMPLE_1 = new Vector2d(-48, -40);
 
@@ -91,7 +91,7 @@ public class RedFarAuto extends LinearOpMode {
 //
 //
 //                 Move to specimen dro//
-                .strafeTo(SPECIMEN_DROP)
+                .strafeTo(SPECIMEN_DROP.position)
 
 
                 .waitSeconds(0.5)//time for claw
@@ -166,6 +166,23 @@ public class RedFarAuto extends LinearOpMode {
                 //.turn(Math.toRadians(225))
 
                 .strafeToLinearHeading(new Vector2d(-36, -63), Math.toRadians(90));
+
+        TrajectoryActionBuilder placeSpecimen = drive.actionBuilder(STARTING_POSE)
+                .strafeTo(SPECIMEN_DROP.position)
+                //wait ant put speciamskdfjas;dlfkja onto the cage
+                .waitSeconds(2)
+                .stopAndAdd(pivot.pivotDown())
+                .stopAndAdd(lift.liftDown())
+                .stopAndAdd(intake.intakeDown())
+                .strafeTo(STARTING_POSE.position);
+        //.stopAndAdd(pushSamples.build());
+
+        TrajectoryActionBuilder park = drive.actionBuilder(SPECIMEN_DROP)
+
+                .waitSeconds(5)
+                .strafeTo(new Vector2d(9,-55))
+
+                .strafeTo(PARK_POS);
         waitForStart();
 
         if (isStopRequested()) return;
@@ -176,12 +193,13 @@ public class RedFarAuto extends LinearOpMode {
                 new ParallelAction(
                         pivot.pivotUp(),
                         lift.liftUp(),
-                        intake.intakeUp(),
+                        //intake.intakeUp(),
                         //lift.liftDown(),
                         //pivot.pivotDown(),
                         //intake.intakeDown(),
                         //intake.intakeUp()
-                        autoSequence.build()
+                        placeSpecimen.build()
+                        //park.build()
                 )
         );
         // Throughout the sequence, you'll need to add your intake/lift controls

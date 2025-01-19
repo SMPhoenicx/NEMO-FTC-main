@@ -51,7 +51,12 @@ public class PrototypePlaceAuto extends LinearOpMode {
     private static final Vector2d SAMPLE_2 = new Vector2d(0, -12);
     private static final Vector2d SAMPLE_3 = new Vector2d(-24, -12);
     private static final Vector2d BUCKET_POS = new Vector2d(0, -48);
-    private static final Vector2d PARK_POS = new Vector2d(60, -12);
+    private static final Vector2d PARK_POS = new Vector2d(55, -55);
+
+
+
+
+
 
     // Initializing motors for lift and intake
     private DcMotor rext = null;//ext are extension
