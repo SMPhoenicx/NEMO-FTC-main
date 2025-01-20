@@ -193,11 +193,6 @@ public class RedFarAuto extends LinearOpMode {
                 new ParallelAction(
                         pivot.pivotUp(),
                         lift.liftUp(),
-                        //intake.intakeUp(),
-                        //lift.liftDown(),
-                        //pivot.pivotDown(),
-                        //intake.intakeDown(),
-                        //intake.intakeUp()
                         placeSpecimen.build()
                         //park.build()
                 )
@@ -388,6 +383,37 @@ public class RedFarAuto extends LinearOpMode {
 
         public Action intakeDown() {
             return new IntakeDown();
+        }
+    }
+
+    public class Wrist {
+
+        public Wrist(HardwareMap hardwareMap) {}
+
+        public class WristUp implements Action {
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                sWrist.setPosition(0);
+                return false;
+            }
+        }
+
+        public class WristDown implements Action {
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                sWrist.setPosition(1);
+                return false;
+            }
+        }
+
+        public Action wristUp() {
+            return new WristUp();
+        }
+
+        public Action wristDown() {
+            return new WristDown();
         }
     }
 

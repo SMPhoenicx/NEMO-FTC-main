@@ -70,6 +70,7 @@ public class RedCloseAuto extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap, STARTING_POSE);
 
         TrajectoryActionBuilder pushSamples = drive.actionBuilder(SPECIMEN_DROP)
+                .waitSeconds(5)
                 .strafeTo(new Vector2d(30,-35))
                 //.splineToSplineHeading(new Pose2d(0,-36,Math.toRadians(0)),Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(36,-10),Math.toRadians(90))
@@ -153,7 +154,7 @@ public class RedCloseAuto extends LinearOpMode {
                         //intake.intakeDown(),
                         //intake.intakeUp()
                         placeSpecimen.build(),
-                        park.build()
+                        pushSamples.build()
                 )
         );
         Actions.runBlocking(new SequentialAction(//push samples afterward
