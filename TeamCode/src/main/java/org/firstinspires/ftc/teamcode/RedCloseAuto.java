@@ -120,8 +120,8 @@ public class RedCloseAuto extends LinearOpMode {
                 .strafeTo(SPECIMEN_DROP.position)
                 //wait ant put speciamskdfjas;dlfkja onto the cage
                 .waitSeconds(2)
-                .stopAndAdd(pivot.pivotDown())
-                .stopAndAdd(lift.liftDown())
+                .stopAndAdd(pivot.pivotDown(800))
+                .stopAndAdd(lift.liftDown(1000))
                 .stopAndAdd(intake.intakeDown());
                 //.stopAndAdd(pushSamples.build());
 
@@ -146,8 +146,8 @@ public class RedCloseAuto extends LinearOpMode {
         );**/
         Actions.runBlocking(//lift arm and move to specimen at same time
                 new ParallelAction(
-                        pivot.pivotUp(),
-                        lift.liftUp(),
+                        pivot.pivotUp(1100),
+                        lift.liftUp(-2900),
                         //intake.intakeUp(),
                         //lift.liftDown(),
                         //pivot.pivotDown(),
@@ -175,6 +175,11 @@ public class RedCloseAuto extends LinearOpMode {
 
         public class LiftUp implements Action {
             private boolean initialized = false;
+            private  int liftMin;
+
+            public LiftUp(int liftmin){
+                liftMin=liftmin;
+            }
 
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
@@ -197,6 +202,11 @@ public class RedCloseAuto extends LinearOpMode {
 
         public class LiftDown implements Action {
             private boolean initialized = false;
+            private int liftMax;
+
+            public LiftDown(int liftmax){
+                liftMax=liftmax;
+            }
 
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
@@ -217,12 +227,12 @@ public class RedCloseAuto extends LinearOpMode {
             }
         }
 
-        public Action liftUp() {
-            return new Lift.LiftUp();
+        public Action liftUp(int liftMin) {
+            return new Lift.LiftUp(liftMin);
         }
 
-        public Action liftDown() {
-            return new Lift.LiftDown();
+        public Action liftDown(int liftMax) {
+            return new Lift.LiftDown(liftMax);
         }
     }
     public class Pivot {
@@ -238,6 +248,11 @@ public class RedCloseAuto extends LinearOpMode {
 
         public class PivotUp implements Action {
             private boolean initialized = false;
+            private int pivotMax;
+
+            public PivotUp(int pivotmax) {
+                pivotMax=pivotmax;
+            }
 
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
@@ -260,6 +275,11 @@ public class RedCloseAuto extends LinearOpMode {
 
         public class PivotDown implements Action {
             private boolean initialized = false;
+            int pivotMin;
+
+            public PivotDown(int pivotmin) {
+                pivotMin=pivotmin;
+            }
 
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
@@ -280,12 +300,12 @@ public class RedCloseAuto extends LinearOpMode {
             }
         }
 
-        public Action pivotUp() {
-            return new Pivot.PivotUp();
+        public Action pivotUp(int pivotMax) {
+            return new Pivot.PivotUp(pivotMax);
         }
 
-        public Action pivotDown() {
-            return new Pivot.PivotDown();
+        public Action pivotDown(int pivotMin) {
+            return new Pivot.PivotDown(pivotMin);
         }
     }
     public class Intake {//dont know how to implement intake on and off, probably like.wait but doesn twokr
