@@ -48,8 +48,8 @@ public class RedCloseAuto extends LinearOpMode {
     private Servo sWrist = null; //wrist joint
 
     private static final int liftMax=1000;
-    private static final int liftMin=-2900;
-    private static final int pivotMax=1100;
+    private static final int liftMin=-3000;
+    private static final int pivotMax=1200;
     private static final int pivotMin=800;
 
 
@@ -70,8 +70,8 @@ public class RedCloseAuto extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap, STARTING_POSE);
 
         TrajectoryActionBuilder pushSamples = drive.actionBuilder(SPECIMEN_DROP)
-                .waitSeconds(5)
-                .strafeTo(new Vector2d(30,-35))
+                .waitSeconds(7)
+                .strafeTo(new Vector2d(37,-35))
                 //.splineToSplineHeading(new Pose2d(0,-36,Math.toRadians(0)),Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(36,-10),Math.toRadians(90))
                 //.splineToConstantHeading(new Vector2d(35,-10),Math.toRadians(90))
@@ -146,8 +146,8 @@ public class RedCloseAuto extends LinearOpMode {
         );**/
         Actions.runBlocking(//lift arm and move to specimen at same time
                 new ParallelAction(
-                        pivot.pivotUp(1100),
-                        lift.liftUp(-2900),
+                        pivot.pivotUp(1200),
+                        lift.liftUp(-3000),
                         //intake.intakeUp(),
                         //lift.liftDown(),
                         //pivot.pivotDown(),
