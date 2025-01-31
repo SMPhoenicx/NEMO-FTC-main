@@ -41,83 +41,20 @@ public class MeepMeepTesting {
 
         //red
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-12, -60, Math.toRadians(90)))
-                // Move to specimen drop
-
-                .strafeTo(SPECIMEN_DROP)
-
-                .waitSeconds(0.5)//time for claw
-
-
-
-                // Move to first sample
-
-                .strafeTo(SAMPLE_1)
-
-                .waitSeconds(0.5)  // Time for intake
-
-
-
-                // Move to bucket
-
-                .lineToYLinearHeading(-50, Math.toRadians(225))
-
-                .waitSeconds(0.5)  // Time for outtake
-
-
-
-                // Move to second sample.
-                .strafeToLinearHeading(SAMPLE_2,Math.toRadians(90))
-                //.turn(Math.toRadians(225))//turn this into .lineToLinearHeading(SAMPLE_2, Math.toRadians(225)
-
-                //I cant because .lineToLinearHeading isn't showing up for me
-
-                //.strafeTo(SAMPLE_2)
-
-                .waitSeconds(0.5)  // Time for intake
-
-//
-
-                // Back to bucket
-
-                .strafeToLinearHeading(BUCKET_POS, Math.toRadians(225))//turn this into .lineToLinearHeading(BUCKET_POS, Math.toRadians(225)
-
-                //I cant because .lineToLinearHeading isn't showing up for me
-
-                //.turn(Math.toRadians(135))
-
-                .waitSeconds(0.5)  // Time for outtake
-
-
-
-                // Move to third sample
-
-                .strafeToLinearHeading(SAMPLE_3,Math.toRadians(90))
-                //.turn(Math.toRadians(225))//turn this into .lineToLinearHeading(SAMPLE_3, Math.toRadians(225)
-
-                //I cant because .lineToLinearHeading isn't showing up for me
-
-                //.strafeTo(SAMPLE_3)
-
-                .waitSeconds(0.5)  // Time for intake
-
-
-
-                // Back to bucket one last time
-
-                .strafeToLinearHeading(BUCKET_POS,Math.toRadians(225))
-
-                //.turn(Math.toRadians(135))
-
-                .waitSeconds(0.5)  // Time for outtake
-
-
-
-                // Park
-
-                //.turn(Math.toRadians(225))
-
-                .strafeToLinearHeading(new Vector2d(-36,-63),Math.toRadians(90))
-
+                .waitSeconds(7)
+                .strafeTo(new Vector2d(33,-35))
+                .splineToConstantHeading(new Vector2d(33,-34),Math.toRadians(90))
+                //.splineToSplineHeading(new Pose2d(0,-36,Math.toRadians(0)),Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(33,-10),Math.toRadians(90))
+                //.splineToConstantHeading(new Vector2d(35,-10),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(42,-10),Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(42,-45),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(42,-10),Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(new Vector2d(52,-10),Math.toRadians(90)),Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(52, -45), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(52,-10), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(new Vector2d(57,-10),Math.toRadians(90)),Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(57, -45), Math.toRadians(90))
 
 //        //blue
 //        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-23, 52, Math.toRadians(-90)))

@@ -33,7 +33,7 @@ public class RedCloseAuto extends LinearOpMode {
     private static final Pose2d STARTING_POSE = new Pose2d(12, -60, Math.toRadians(90));
 
     // Sample positions (adjust these based on your field measurements)
-    private static final Pose2d SPECIMEN_DROP = new Pose2d(9, -27,Math.toRadians(90));
+    private static final Pose2d SPECIMEN_DROP = new Pose2d(9, -30,Math.toRadians(90));
     private static final Vector2d SAMPLE_1 = new Vector2d(24, -12);
     private static final Vector2d SAMPLE_2 = new Vector2d(0, -12);
     private static final Vector2d SAMPLE_3 = new Vector2d(-24, -12);
@@ -71,9 +71,10 @@ public class RedCloseAuto extends LinearOpMode {
 
         TrajectoryActionBuilder pushSamples = drive.actionBuilder(SPECIMEN_DROP)
                 .waitSeconds(7)
-                .strafeTo(new Vector2d(37,-35))
+                .strafeTo(new Vector2d(32,-35))
+                .splineToConstantHeading(new Vector2d(32,-34),Math.toRadians(90))
                 //.splineToSplineHeading(new Pose2d(0,-36,Math.toRadians(0)),Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(36,-10),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(32,-10),Math.toRadians(90))
                 //.splineToConstantHeading(new Vector2d(35,-10),Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(42,-10),Math.toRadians(-90))
                 .splineToConstantHeading(new Vector2d(42,-45),Math.toRadians(90))
@@ -81,13 +82,17 @@ public class RedCloseAuto extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(new Vector2d(52,-10),Math.toRadians(90)),Math.toRadians(-90))
                 .splineToConstantHeading(new Vector2d(52, -45), Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(52,-10), Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(new Vector2d(58,-10),Math.toRadians(90)),Math.toRadians(-90))
-                .splineToConstantHeading(new Vector2d(58, -45), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(new Vector2d(57,-10),Math.toRadians(90)),Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(57, -45), Math.toRadians(90))
 
                 //move to pick up second block
-                .splineTo(new Vector2d(56,-45), Math.toRadians(-90))
-                .waitSeconds(0.5)//intake
+                .splineTo(new Vector2d(54,-45), Math.toRadians(-90))
+                .stopAndAdd(pivot.pivotDown(0))
+                .stopAndAdd(lift.liftUp(-400))
+                .stopAndAdd(intake.intakeUp())
+                .waitSeconds(0.5);//intake
 
+        TrajectoryActionBuilder specimen1 = drive.actionBuilder(new Pose2d(56,-45,Math.toRadians(90)))
                 //move to drop off block w clip
                 .splineToSplineHeading(new Pose2d(50,-45,Math.toRadians(180)),Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(3,-35,Math.toRadians(90)),Math.toRadians(90))
@@ -146,7 +151,7 @@ public class RedCloseAuto extends LinearOpMode {
         );**/
         Actions.runBlocking(//lift arm and move to specimen at same time
                 new ParallelAction(
-                        pivot.pivotUp(1200),
+                        pivot.pivotUp(800),
                         lift.liftUp(-3000),
                         //intake.intakeUp(),
                         //lift.liftDown(),

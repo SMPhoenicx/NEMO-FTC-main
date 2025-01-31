@@ -85,6 +85,7 @@ public class RedFarAuto extends LinearOpMode {
         Lift lift = new Lift(hardwareMap);
         Pivot pivot = new Pivot(hardwareMap);
         Intake intake = new Intake(hardwareMap);
+        Wrist wrist=new Wrist(hardwareMap);
         MecanumDrive drive = new MecanumDrive(hardwareMap, STARTING_POSE);
 
         TrajectoryActionBuilder autoSequence = drive.actionBuilder(STARTING_POSE)
@@ -191,9 +192,10 @@ public class RedFarAuto extends LinearOpMode {
         //Actions.runBlocking(autoSequence);
         Actions.runBlocking(
                 new ParallelAction(
-                        pivot.pivotUp(),
-                        lift.liftUp(),
-                        placeSpecimen.build()
+                        intake.intakeUp()
+                        //pivot.pivotUp(),
+                        //lift.liftUp(),
+                        //placeSpecimen.build()
                         //park.build()
                 )
         );
@@ -386,7 +388,7 @@ public class RedFarAuto extends LinearOpMode {
         }
     }
 
-    public class Wrist {
+    public class Wrist {//this doesn't really work, but we shouldn't need to use it
 
         public Wrist(HardwareMap hardwareMap) {}
 
@@ -404,6 +406,10 @@ public class RedFarAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 sWrist.setPosition(1);
+                if(sWrist.getPosition()>0){
+                    sWrist.setPosition(sWrist.getPosition()-.1);
+                    return true;
+                }
                 return false;
             }
         }
