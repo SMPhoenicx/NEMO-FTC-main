@@ -93,6 +93,7 @@ public class RedCloseAuto extends LinearOpMode {
                 .waitSeconds(0.5);//intake
 
         TrajectoryActionBuilder specimen1 = drive.actionBuilder(new Pose2d(56,-45,Math.toRadians(90)))
+                .waitSeconds(15)
                 //move to drop off block w clip
                 .splineToSplineHeading(new Pose2d(50,-45,Math.toRadians(180)),Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(3,-35,Math.toRadians(90)),Math.toRadians(90))
@@ -151,7 +152,7 @@ public class RedCloseAuto extends LinearOpMode {
         );**/
         Actions.runBlocking(//lift arm and move to specimen at same time
                 new ParallelAction(
-                        pivot.pivotUp(800),
+                        pivot.pivotUp(1300),
                         lift.liftUp(-3000),
                         //intake.intakeUp(),
                         //lift.liftDown(),
@@ -159,13 +160,14 @@ public class RedCloseAuto extends LinearOpMode {
                         //intake.intakeDown(),
                         //intake.intakeUp()
                         placeSpecimen.build(),
-                        pushSamples.build()
+                        pushSamples.build(),
+                        specimen1.build()
                 )
         );
-        Actions.runBlocking(new SequentialAction(//push samples afterward
-
-                pushSamples.build()
-        ));
+        //Actions.runBlocking(new SequentialAction(//push samples afterward
+//
+  //              pushSamples.build()
+    //    ));
     }
     public class Lift {
 
