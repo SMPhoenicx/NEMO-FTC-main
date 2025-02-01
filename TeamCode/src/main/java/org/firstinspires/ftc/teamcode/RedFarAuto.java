@@ -192,10 +192,9 @@ public class RedFarAuto extends LinearOpMode {
         //Actions.runBlocking(autoSequence);
         Actions.runBlocking(
                 new ParallelAction(
-                        intake.intakeUp()
-                        //pivot.pivotUp(),
-                        //lift.liftUp(),
-                        //placeSpecimen.build()
+                        pivot.pivotUp(),
+                        lift.liftUp(),
+                        placeSpecimen.build()
                         //park.build()
                 )
         );
@@ -388,7 +387,7 @@ public class RedFarAuto extends LinearOpMode {
         }
     }
 
-    public class Wrist {//this doesn't really work, but we shouldn't need to use it
+    public class Wrist {
 
         public Wrist(HardwareMap hardwareMap) {}
 
@@ -406,10 +405,6 @@ public class RedFarAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 sWrist.setPosition(1);
-                if(sWrist.getPosition()>0){
-                    sWrist.setPosition(sWrist.getPosition()-.1);
-                    return true;
-                }
                 return false;
             }
         }

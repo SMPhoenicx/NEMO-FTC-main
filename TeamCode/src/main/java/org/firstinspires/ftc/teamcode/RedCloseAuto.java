@@ -33,7 +33,7 @@ public class RedCloseAuto extends LinearOpMode {
     private static final Pose2d STARTING_POSE = new Pose2d(12, -60, Math.toRadians(90));
 
     // Sample positions (adjust these based on your field measurements)
-    private static final Pose2d SPECIMEN_DROP = new Pose2d(9, -30,Math.toRadians(90));
+    private static final Pose2d SPECIMEN_DROP = new Pose2d(9, -30, Math.toRadians(90));
     private static final Vector2d SAMPLE_1 = new Vector2d(24, -12);
     private static final Vector2d SAMPLE_2 = new Vector2d(0, -12);
     private static final Vector2d SAMPLE_3 = new Vector2d(-24, -12);
@@ -47,10 +47,10 @@ public class RedCloseAuto extends LinearOpMode {
     private CRServo servo2 = null;
     private Servo sWrist = null; //wrist joint
 
-    private static final int liftMax=1000;
-    private static final int liftMin=-3000;
-    private static final int pivotMax=1200;
-    private static final int pivotMin=800;
+    private static final int liftMax = 1000;
+    private static final int liftMin = -2900;
+    private static final int pivotMax = 1100;
+    private static final int pivotMin = 800;
 
 
     @Override
@@ -67,60 +67,46 @@ public class RedCloseAuto extends LinearOpMode {
         Lift lift = new Lift(hardwareMap);
         Pivot pivot = new Pivot(hardwareMap);
         Intake intake = new Intake(hardwareMap);
+        Wrist wrist = new Wrist(hardwareMap);
         MecanumDrive drive = new MecanumDrive(hardwareMap, STARTING_POSE);
 
         TrajectoryActionBuilder pushSamples = drive.actionBuilder(SPECIMEN_DROP)
                 .waitSeconds(7)
-                .strafeTo(new Vector2d(32,-35))
-                .splineToConstantHeading(new Vector2d(32,-34),Math.toRadians(90))
+                .strafeTo(new Vector2d(36, -35))
+                .splineToConstantHeading(new Vector2d(36, -34), Math.toRadians(90))
                 //.splineToSplineHeading(new Pose2d(0,-36,Math.toRadians(0)),Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(32,-10),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(36, -10), Math.toRadians(90))
                 //.splineToConstantHeading(new Vector2d(35,-10),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(42,-10),Math.toRadians(-90))
-                .splineToConstantHeading(new Vector2d(42,-45),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(42,-10),Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(new Vector2d(52,-10),Math.toRadians(90)),Math.toRadians(-90))
-                .splineToConstantHeading(new Vector2d(52, -45), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(52,-10), Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(new Vector2d(57,-10),Math.toRadians(90)),Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(42, -10), Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(42, -45), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(42, -10), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(new Vector2d(49, -10), Math.toRadians(90)), Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(49, -45), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(49, -10), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(new Vector2d(57, -10), Math.toRadians(90)), Math.toRadians(-90))
                 .splineToConstantHeading(new Vector2d(57, -45), Math.toRadians(90))
 
-                //move to pick up second block
-                .splineTo(new Vector2d(54,-45), Math.toRadians(-90))
-                .stopAndAdd(pivot.pivotDown(0))
-                .stopAndAdd(lift.liftUp(-400))
+                //place block
+                .splineTo(new Vector2d(54, -45), Math.toRadians(-90))
+                .stopAndAdd(pivot.pivotDown(350))
+                .waitSeconds(0.5)
+                .stopAndAdd(lift.liftUp(200))
+                .waitSeconds(0.5)
+                .stopAndAdd(wrist.WristUp())
+                .waitSeconds(0.5)
                 .stopAndAdd(intake.intakeUp())
-                .waitSeconds(0.5);//intake
+                .waitSeconds(0.5)
+                .stopAndAdd(wrist.WristDown())
+                .waitSeconds(0.5);
 
-        TrajectoryActionBuilder specimen1 = drive.actionBuilder(new Pose2d(56,-45,Math.toRadians(90)))
-                .waitSeconds(15)
-                //move to drop off block w clip
-                .splineToSplineHeading(new Pose2d(50,-45,Math.toRadians(180)),Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(3,-35,Math.toRadians(90)),Math.toRadians(90))
-                .waitSeconds(0.5)//outtake
-
-
-
-//move to pick up third block
-
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(50,-45,Math.toRadians(-90)),Math.toRadians(-90))
-                .setReversed(false)
-
-                .waitSeconds(0.5)//intake
-
-
-
-//move to drop off block w clip
-
-                .splineToSplineHeading(new Pose2d(40,-45,Math.toRadians(180)),Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(3,-35,Math.toRadians(90)),Math.toRadians(90))
-
-                .waitSeconds(0.5)//outtake
-
-//park
-
-                .strafeTo(PARK_POS);
+        TrajectoryActionBuilder speciman1 = drive.actionBuilder(new Pose2d(56, -45, Math.toRadians(90)))
+                .waitSeconds(22)
+                .splineToSplineHeading(new Pose2d(50, -45, Math.toRadians(180)), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(3, -35, Math.toRadians(90)), Math.toRadians(90))
+                .stopAndAdd(pivot.pivotUp(1100))
+                .stopAndAdd(lift.liftDown(-3000))
+                .stopAndAdd(intake.intakeDown())
+                .waitSeconds(0.5);
 
         TrajectoryActionBuilder placeSpecimen = drive.actionBuilder(STARTING_POSE)
                 .strafeTo(SPECIMEN_DROP.position)
@@ -129,14 +115,25 @@ public class RedCloseAuto extends LinearOpMode {
                 .stopAndAdd(pivot.pivotDown(800))
                 .stopAndAdd(lift.liftDown(1000))
                 .stopAndAdd(intake.intakeDown());
-                //.stopAndAdd(pushSamples.build());
+        //.stopAndAdd(pushSamples.build());
 
-        TrajectoryActionBuilder park = drive.actionBuilder(SPECIMEN_DROP)
 
-                .waitSeconds(5)
-                .strafeTo(new Vector2d(9,-55))
+        TrajectoryActionBuilder placeSpecimen1 = drive.actionBuilder(new Pose2d(3, -35, Math.toRadians(190)))
+                //wait ant put speciamskdfjas;dlfkja onto the cage
+                .waitSeconds(26)
+                .strafeTo(SPECIMEN_DROP.position)
+                .stopAndAdd(pivot.pivotDown(800))
+                .stopAndAdd(lift.liftDown(1000))
+                .stopAndAdd(intake.intakeDown());
+        //.stopAndAdd(pushSamples.build());
 
-                .strafeTo(PARK_POS);
+
+//        TrajectoryActionBuilder park = drive.actionBuilder(SPECIMEN_DROP)
+//
+//                .waitSeconds(5)
+//                .strafeTo(new Vector2d(9, -55))
+//
+//                .strafeTo(PARK_POS);
 
 
         waitForStart();
@@ -146,13 +143,13 @@ public class RedCloseAuto extends LinearOpMode {
         // TODO: Set lift to specimen height
         //Actions.runBlocking(autoSequence);
         /**Actions.runBlocking(
-                new SequentialAction(
-                        autoSequence.build()
-                )
-        );**/
+         new SequentialAction(
+         autoSequence.build()
+         )
+         );**/
         Actions.runBlocking(//lift arm and move to specimen at same time
                 new ParallelAction(
-                        pivot.pivotUp(1300),
+                        pivot.pivotUp(1200),
                         lift.liftUp(-3000),
                         //intake.intakeUp(),
                         //lift.liftDown(),
@@ -161,14 +158,16 @@ public class RedCloseAuto extends LinearOpMode {
                         //intake.intakeUp()
                         placeSpecimen.build(),
                         pushSamples.build(),
-                        specimen1.build()
+                        speciman1.build(),
+                        placeSpecimen1.build()
                 )
         );
-        //Actions.runBlocking(new SequentialAction(//push samples afterward
-//
-  //              pushSamples.build()
-    //    ));
+        Actions.runBlocking(new SequentialAction(//push samples afterward
+
+//                pushSamples.build()
+        ));
     }
+
     public class Lift {
 
         public Lift(HardwareMap hardwareMap) {
@@ -182,21 +181,21 @@ public class RedCloseAuto extends LinearOpMode {
 
         public class LiftUp implements Action {
             private boolean initialized = false;
-            private  int liftMin;
+            private int liftMin;
 
-            public LiftUp(int liftmin){
-                liftMin=liftmin;
+            public LiftUp(int liftmin) {
+                liftMin = liftmin;
             }
 
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    rext.setPower(-.5);
-                    lext.setPower(-.5);
+                    rext.setPower(-0.5);
+                    lext.setPower(-0.5);
                     initialized = true;
                 }
                 double pos = lext.getCurrentPosition();
-                packet.put("liftPos",pos);
+                packet.put("liftPos", pos);
                 if (pos > liftMin) {
                     return true;
                 } else {
@@ -211,19 +210,19 @@ public class RedCloseAuto extends LinearOpMode {
             private boolean initialized = false;
             private int liftMax;
 
-            public LiftDown(int liftmax){
-                liftMax=liftmax;
+            public LiftDown(int liftmax) {
+                liftMax = liftmax;
             }
 
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    rext.setPower(1);
-                    lext.setPower(1);
+                    rext.setPower(0.5);
+                    lext.setPower(0.5);
                     initialized = true;
                 }
                 double pos = lext.getCurrentPosition();
-                packet.put("liftPos",pos);
+                packet.put("liftPos", pos);
                 if (pos < liftMax) {
                     return true;
                 } else {
@@ -242,6 +241,7 @@ public class RedCloseAuto extends LinearOpMode {
             return new Lift.LiftDown(liftMax);
         }
     }
+
     public class Pivot {
 
         public Pivot(HardwareMap hardwareMap) {
@@ -258,14 +258,14 @@ public class RedCloseAuto extends LinearOpMode {
             private int pivotMax;
 
             public PivotUp(int pivotmax) {
-                pivotMax=pivotmax;
+                pivotMax = pivotmax;
             }
 
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    rpivot.setPower(0.5);
-                    lpivot.setPower(0.5);
+                    rpivot.setPower(1);
+                    lpivot.setPower(1);
                     initialized = true;
                 }
                 double pos = lpivot.getCurrentPosition();
@@ -285,14 +285,14 @@ public class RedCloseAuto extends LinearOpMode {
             int pivotMin;
 
             public PivotDown(int pivotmin) {
-                pivotMin=pivotmin;
+                pivotMin = pivotmin;
             }
 
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    rpivot.setPower(-0.5);
-                    lpivot.setPower(-0.5);
+                    rpivot.setPower(-1);
+                    lpivot.setPower(-1);
                     initialized = true;
                 }
                 double pos = lpivot.getCurrentPosition();
@@ -315,6 +315,7 @@ public class RedCloseAuto extends LinearOpMode {
             return new Pivot.PivotDown(pivotMin);
         }
     }
+
     public class Intake {//dont know how to implement intake on and off, probably like.wait but doesn twokr
         //unless in the runOpMode soooo idk
 
@@ -372,6 +373,59 @@ public class RedCloseAuto extends LinearOpMode {
 
         public Action intakeDown() {
             return new Intake.IntakeDown();
+        }
+    }
+
+    public class Wrist {//dont know how to implement intake on and off, probably like.wait but doesn twokr
+        //unless in the runOpMode soooo idk
+
+        public Wrist(HardwareMap hardwareMap) {
+
+            sWrist.setDirection(Servo.Direction.FORWARD);
+        }
+
+        public class WristUp implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    sWrist.setPosition(0.65);
+                    initialized = true;
+                    resetRuntime();
+                }
+                if (getRuntime() < 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        public class WristDown implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    sWrist.setPosition(0.4);
+                    initialized = true;
+                    resetRuntime();
+                }
+                if (getRuntime() < 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        public Action WristUp() {
+            return new RedCloseAuto.Wrist.WristUp();
+        }
+
+        public Action WristDown() {
+            return new RedCloseAuto.Wrist.WristDown();
         }
     }
 }
