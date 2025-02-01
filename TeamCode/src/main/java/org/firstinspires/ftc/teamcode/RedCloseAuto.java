@@ -71,47 +71,43 @@ public class RedCloseAuto extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap, STARTING_POSE);
 
         TrajectoryActionBuilder pushSamples = drive.actionBuilder(SPECIMEN_DROP)
-                .waitSeconds(7)
-                .strafeTo(new Vector2d(36, -35))
-                .splineToConstantHeading(new Vector2d(36, -34), Math.toRadians(90))
-                //.splineToSplineHeading(new Pose2d(0,-36,Math.toRadians(0)),Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(36, -10), Math.toRadians(90))
-                //.splineToConstantHeading(new Vector2d(35,-10),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(42, -10), Math.toRadians(-90))
-                .splineToConstantHeading(new Vector2d(42, -45), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(42, -10), Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(new Vector2d(49, -10), Math.toRadians(90)), Math.toRadians(-90))
-                .splineToConstantHeading(new Vector2d(49, -45), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(49, -10), Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(new Vector2d(57, -10), Math.toRadians(90)), Math.toRadians(-90))
-                .splineToConstantHeading(new Vector2d(57, -45), Math.toRadians(90))
+                .waitSeconds(5.5)
+                .strafeTo(new Vector2d(9,-32))
+                .strafeTo(new Vector2d(35,-35))
+                .splineToConstantHeading(new Vector2d(35,-34),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(35,-10),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(46,-10),Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(46,-45),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(46,-10),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(56,-10),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(56, -45), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(56,-35), Math.toRadians(90))
+                //.splineToConstantHeading(new Vector2d(54,-10), Math.toRadians(90))
+                //.splineToConstantHeading(new Vector2d(59,-10),Math.toRadians(90))
+                //.splineToConstantHeading(new Vector2d(59, -45), Math.toRadians(90))
 
-                //place block
-                .splineTo(new Vector2d(54, -45), Math.toRadians(-90))
-                .stopAndAdd(pivot.pivotDown(350))
-                .waitSeconds(0.5)
-                .stopAndAdd(lift.liftUp(200))
-                .waitSeconds(0.5)
-                .stopAndAdd(wrist.WristUp())
-                .waitSeconds(0.5)
+                //pick up block
+                .splineTo(new Vector2d(54, -50), Math.toRadians(-90))
+                .stopAndAdd(wrist.wristUp())
                 .stopAndAdd(intake.intakeUp())
-                .waitSeconds(0.5)
-                .stopAndAdd(wrist.WristDown())
-                .waitSeconds(0.5);
+                .stopAndAdd(pivot.pivotDown(400))
+                .stopAndAdd(intake.intakeUp())
+                .stopAndAdd(lift.liftUp(-1800))
+                .stopAndAdd(intake.intakeUp());
 
         TrajectoryActionBuilder speciman1 = drive.actionBuilder(new Pose2d(56, -45, Math.toRadians(90)))
-                .waitSeconds(22)
+                .waitSeconds(25)
                 .splineToSplineHeading(new Pose2d(50, -45, Math.toRadians(180)), Math.toRadians(180))
                 .splineToSplineHeading(new Pose2d(3, -35, Math.toRadians(90)), Math.toRadians(90))
-                .stopAndAdd(pivot.pivotUp(1100))
-                .stopAndAdd(lift.liftDown(-3000))
+                .stopAndAdd(pivot.pivotUp(1200))
+                .stopAndAdd(lift.liftDown(-3050))
                 .stopAndAdd(intake.intakeDown())
                 .waitSeconds(0.5);
 
         TrajectoryActionBuilder placeSpecimen = drive.actionBuilder(STARTING_POSE)
                 .strafeTo(SPECIMEN_DROP.position)
                 //wait ant put speciamskdfjas;dlfkja onto the cage
-                .waitSeconds(2)
+                .waitSeconds(1)
                 .stopAndAdd(pivot.pivotDown(800))
                 .stopAndAdd(lift.liftDown(1000))
                 .stopAndAdd(intake.intakeDown());
@@ -120,8 +116,9 @@ public class RedCloseAuto extends LinearOpMode {
 
         TrajectoryActionBuilder placeSpecimen1 = drive.actionBuilder(new Pose2d(3, -35, Math.toRadians(190)))
                 //wait ant put speciamskdfjas;dlfkja onto the cage
-                .waitSeconds(26)
+                .waitSeconds(27)
                 .strafeTo(SPECIMEN_DROP.position)
+                .waitSeconds(1)
                 .stopAndAdd(pivot.pivotDown(800))
                 .stopAndAdd(lift.liftDown(1000))
                 .stopAndAdd(intake.intakeDown());
@@ -150,7 +147,7 @@ public class RedCloseAuto extends LinearOpMode {
         Actions.runBlocking(//lift arm and move to specimen at same time
                 new ParallelAction(
                         pivot.pivotUp(1200),
-                        lift.liftUp(-3000),
+                        lift.liftUp(-3050),
                         //intake.intakeUp(),
                         //lift.liftDown(),
                         //pivot.pivotDown(),
@@ -420,11 +417,11 @@ public class RedCloseAuto extends LinearOpMode {
             }
         }
 
-        public Action WristUp() {
+        public Action wristUp() {
             return new RedCloseAuto.Wrist.WristUp();
         }
 
-        public Action WristDown() {
+        public Action wristDown() {
             return new RedCloseAuto.Wrist.WristDown();
         }
     }

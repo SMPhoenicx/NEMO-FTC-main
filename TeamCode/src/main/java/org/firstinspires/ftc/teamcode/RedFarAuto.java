@@ -66,8 +66,8 @@ public class RedFarAuto extends LinearOpMode {
     private CRServo servo2 = null;
     private Servo sWrist = null; //wrist joint
 
-    private static final int liftMax=1000;
-    private static final int liftMin=-2900;
+    private static final int liftMax=1100;
+    private static final int liftMin=-3000;
     private static final int pivotMax=1000;
     private static final int pivotMin=800;
 
@@ -194,8 +194,8 @@ public class RedFarAuto extends LinearOpMode {
                 new ParallelAction(
                         pivot.pivotUp(),
                         lift.liftUp(),
-                        placeSpecimen.build()
-                        //park.build()
+                        placeSpecimen.build(),
+                        park.build()
                 )
         );
         // Throughout the sequence, you'll need to add your intake/lift controls
