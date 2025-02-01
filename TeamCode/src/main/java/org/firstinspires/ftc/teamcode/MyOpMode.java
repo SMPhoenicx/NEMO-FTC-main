@@ -177,9 +177,9 @@ public class MyOpMode extends LinearOpMode {
             double extPower = gamepad2.left_stick_y;
             //software horizontal extension limit
             int pivotTicks = lpivot.getCurrentPosition();
-            double pivotAngle = (pivotTicks - 500) / 1300.0 * 45.0;
-            if(lext.getCurrentPosition() * Math.cos(pivotAngle / 180.0 * Math.PI) < -5386) extPower = Math.max(0, extPower);
-            if(pivotTicks > 2400) pivotPower = Math.min(0, pivotPower);
+            double pivotAngle = (pivotTicks) / 1200.0 * 90.0;
+            if(lext.getCurrentPosition() * Math.cos((pivotAngle / 180.0) * Math.PI) < -4000) extPower = Math.max(0, extPower);
+            if(pivotTicks > 1400) pivotPower = Math.min(0, pivotPower);
 
             double wristPower = gamepad2.right_trigger - gamepad2.left_trigger;
             wristPosition += wristPower * wristSpeed * (runtime.seconds() - wristStartTime);
