@@ -94,31 +94,30 @@ public class RedCloseAuto extends LinearOpMode {
                 .stopAndAdd(intake.intakeUp())
                 //lift to prepare for outtake
                 .stopAndAdd(pivot.pivotUp(1200))
-                .stopAndAdd(lift.liftUp(-3000));
+                .stopAndAdd(lift.liftUp(-2000));
 
-        TrajectoryActionBuilder speciman1 = drive.actionBuilder(new Pose2d(56, -45, Math.toRadians(90)))
+        TrajectoryActionBuilder speciman1 = drive.actionBuilder(new Pose2d(54, -50, Math.toRadians(90)))
                 .waitSeconds(23)
-                .splineToSplineHeading(new Pose2d(40, -45, Math.toRadians(180)), Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(3, -40, Math.toRadians(90)), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(40, -45, Math.toRadians(180)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(3, -40, Math.toRadians(90)), Math.toRadians(90))
                 //.stopAndAdd(pivot.pivotUp(1200))
-                .stopAndAdd(lift.liftDown(-2800));
+                .stopAndAdd(lift.liftDown(500));
+        ;
 
         TrajectoryActionBuilder placeSpecimen = drive.actionBuilder(STARTING_POSE)
                 .strafeTo(SPECIMEN_DROP.position)
                 //wait ant put speciamskdfjas;dlfkja onto the cage
-                .waitSeconds(.5)
+                .waitSeconds(1)
                 .stopAndAdd(pivot.pivotDown(800))
                 .stopAndAdd(lift.liftDown(1000))
                 .stopAndAdd(intake.intakeDown());
         //.stopAndAdd(pushSamples.build());
 
 
-        TrajectoryActionBuilder placeSpecimen1 = drive.actionBuilder(new Pose2d(3, -35, Math.toRadians(190)))
+        TrajectoryActionBuilder placeSpecimen1 = drive.actionBuilder(new Pose2d(3, -40, Math.toRadians(90)))
                 //wait ant put speciamskdfjas;dlfkja onto the cage
-                .waitSeconds(27)
-                .strafeTo(SPECIMEN_DROP.position)
-                .turn(Math.toRadians(-30))
-                .waitSeconds(.5)
+                .waitSeconds(27.5)
+                .strafeTo(new Vector2d(-6,-30))
                 .stopAndAdd(pivot.pivotDown(800))
                 .stopAndAdd(lift.liftDown(1000))
                 .stopAndAdd(intake.intakeDown());
