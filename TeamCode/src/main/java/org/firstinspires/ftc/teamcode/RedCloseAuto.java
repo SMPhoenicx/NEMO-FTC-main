@@ -89,25 +89,24 @@ public class RedCloseAuto extends LinearOpMode {
                 //pick up block
                 .splineTo(new Vector2d(54, -50), Math.toRadians(-90))
                 .stopAndAdd(wrist.wristUp())
-                .stopAndAdd(intake.intakeUp())
                 .stopAndAdd(pivot.pivotDown(400))
+                .stopAndAdd(lift.liftUp(-1600))
                 .stopAndAdd(intake.intakeUp())
-                .stopAndAdd(lift.liftUp(-1800))
-                .stopAndAdd(intake.intakeUp());
+                //lift to prepare for outtake
+                .stopAndAdd(pivot.pivotUp(1200))
+                .stopAndAdd(lift.liftUp(-3000));
 
         TrajectoryActionBuilder speciman1 = drive.actionBuilder(new Pose2d(56, -45, Math.toRadians(90)))
-                .waitSeconds(25)
-                .splineToSplineHeading(new Pose2d(50, -45, Math.toRadians(180)), Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(3, -35, Math.toRadians(90)), Math.toRadians(90))
-                .stopAndAdd(pivot.pivotUp(1200))
-                .stopAndAdd(lift.liftDown(-3050))
-                .stopAndAdd(intake.intakeDown())
-                .waitSeconds(0.5);
+                .waitSeconds(23)
+                .splineToSplineHeading(new Pose2d(40, -45, Math.toRadians(180)), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(3, -40, Math.toRadians(90)), Math.toRadians(90))
+                //.stopAndAdd(pivot.pivotUp(1200))
+                .stopAndAdd(lift.liftDown(-2800));
 
         TrajectoryActionBuilder placeSpecimen = drive.actionBuilder(STARTING_POSE)
                 .strafeTo(SPECIMEN_DROP.position)
                 //wait ant put speciamskdfjas;dlfkja onto the cage
-                .waitSeconds(1)
+                .waitSeconds(.5)
                 .stopAndAdd(pivot.pivotDown(800))
                 .stopAndAdd(lift.liftDown(1000))
                 .stopAndAdd(intake.intakeDown());
@@ -118,7 +117,8 @@ public class RedCloseAuto extends LinearOpMode {
                 //wait ant put speciamskdfjas;dlfkja onto the cage
                 .waitSeconds(27)
                 .strafeTo(SPECIMEN_DROP.position)
-                .waitSeconds(1)
+                .turn(Math.toRadians(-30))
+                .waitSeconds(.5)
                 .stopAndAdd(pivot.pivotDown(800))
                 .stopAndAdd(lift.liftDown(1000))
                 .stopAndAdd(intake.intakeDown());
@@ -159,10 +159,10 @@ public class RedCloseAuto extends LinearOpMode {
                         placeSpecimen1.build()
                 )
         );
-        Actions.runBlocking(new SequentialAction(//push samples afterward
+        //Actions.runBlocking(new SequentialAction(//push samples afterward
 
 //                pushSamples.build()
-        ));
+        //));
     }
 
     public class Lift {
