@@ -89,8 +89,8 @@ public class RedCloseAuto extends LinearOpMode {
                 //pick up block
                 .splineTo(new Vector2d(54, -50), Math.toRadians(-90))
                 .stopAndAdd(wrist.wristUp())
-                .stopAndAdd(pivot.pivotDown(400))
-                .stopAndAdd(lift.liftUp(-1600))
+                .stopAndAdd(pivot.pivotDown(350))
+                .stopAndAdd(lift.liftUp(-1400))
                 .stopAndAdd(intake.intakeUp())
                 //lift to prepare for outtake
                 .stopAndAdd(pivot.pivotUp(1200))
@@ -101,7 +101,7 @@ public class RedCloseAuto extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(40, -45, Math.toRadians(180)), Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(3, -40, Math.toRadians(90)), Math.toRadians(90))
                 //.stopAndAdd(pivot.pivotUp(1200))
-                .stopAndAdd(lift.liftDown(500));
+                .stopAndAdd(lift.liftDown(-500));
         ;
 
         TrajectoryActionBuilder placeSpecimen = drive.actionBuilder(STARTING_POSE)

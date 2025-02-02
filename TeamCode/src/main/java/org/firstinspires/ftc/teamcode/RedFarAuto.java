@@ -56,7 +56,7 @@ public class RedFarAuto extends LinearOpMode {
 
     private static final Vector2d BUCKET_POS = new Vector2d(-48, -50);
 
-    private static final Vector2d PARK_POS = new Vector2d(60, -12);
+    private static final Vector2d PARK_POS = new Vector2d(-20, 0);
 
     private DcMotor rext = null;//ext are extension
     private DcMotor lext = null;
@@ -181,9 +181,9 @@ public class RedFarAuto extends LinearOpMode {
         TrajectoryActionBuilder park = drive.actionBuilder(SPECIMEN_DROP)
 
                 .waitSeconds(5)
-                .strafeTo(new Vector2d(9,-55))
-
-                .strafeTo(PARK_POS);
+                .turn(Math.toRadians(-90))
+                .strafeTo(new Vector2d(-50,-20))
+                .strafeTo(new Vector2d(-20,0));
         waitForStart();
 
         if (isStopRequested()) return;

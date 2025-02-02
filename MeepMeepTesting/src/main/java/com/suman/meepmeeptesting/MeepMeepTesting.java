@@ -41,22 +41,9 @@ public class MeepMeepTesting {
 
         //red
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-12, -60, Math.toRadians(90)))
-                .waitSeconds(7)
-                .strafeTo(new Vector2d(33,-35))
-                .splineToConstantHeading(new Vector2d(33,-34),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(33,-10),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(42,-10),Math.toRadians(-90))
-                .splineToConstantHeading(new Vector2d(42,-45),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(42,-10),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(52,-10),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(52, -45), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(52,-10), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(57,-10),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(57, -45), Math.toRadians(90))
-                .splineTo(new Vector2d(54, -45), Math.toRadians(-90))
-                .splineToLinearHeading(new Pose2d(40, -45, Math.toRadians(180)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(3, -40, Math.toRadians(90)), Math.toRadians(90))
-                .strafeTo(new Pose2d(9, -30, Math.toRadians(90)).position)
+                .turn(Math.toRadians(-90))
+                .strafeTo(new Vector2d(-50,-20))
+                .strafeTo(new Vector2d(-20,0))
 
 //        //blue
 //        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-23, 52, Math.toRadians(-90)))
