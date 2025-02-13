@@ -105,28 +105,25 @@ public class RedFarAuto extends LinearOpMode {
 
                 .lineToYLinearHeading(-50, Math.toRadians(225))
 
-                .waitSeconds(0.5)  // Time for outtake
-
+                .stopAndAdd(pivot.pivotUp(800))
+                .stopAndAdd(lift.liftUp(-2200))
+                .stopAndAdd(intake.intakeDown())
 
                 // Move to second sample.
                 .strafeToLinearHeading(SAMPLE_2, Math.toRadians(90))
                 //.turn(Math.toRadians(225))//turn this into .lineToLinearHeading(SAMPLE_2, Math.toRadians(225)
 
-                //I cant because .lineToLinearHeading isn't showing up for me
-
-                //.strafeTo(SAMPLE_2)
-
-                .waitSeconds(0.5)  // Time for intake
-
-                //
+                .stopAndAdd(pivot.pivotDown(0))
+                .stopAndAdd(lift.liftDown(0))
+                .stopAndAdd(intake.intakeDown())
 
                 // Back to bucket
 
                 .strafeToLinearHeading(BUCKET_POS, Math.toRadians(225))//turn this into .lineToLinearHeading(BUCKET_POS, Math.toRadians(225)
 
-                //I cant because .lineToLinearHeading isn't showing up for me
-
-                //.turn(Math.toRadians(135))
+                .stopAndAdd(pivot.pivotUp(800))
+                .stopAndAdd(lift.liftUp(-2200))
+                .stopAndAdd(intake.intakeDown())
 
                 .waitSeconds(0.5)  // Time for outtake
 
