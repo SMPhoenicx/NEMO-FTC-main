@@ -40,10 +40,40 @@ public class MeepMeepTesting {
                 .build();
 
         //red
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-12, -60, Math.toRadians(90)))
-                .turn(Math.toRadians(-90))
-                .strafeTo(new Vector2d(-50,-20))
-                .strafeTo(new Vector2d(-20,0))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(12, -60, Math.toRadians(90)))
+//                .strafeToLinearHeading(new Vector2d(36,-17), Math.toRadians(0))
+//                .splineToLinearHeading(new Pose2d(36,-20,Math.toRadians(-90)),Math.toRadians(-90))
+//                .strafeToLinearHeading(new Vector2d(46,-17), Math.toRadians(0))
+//                .splineToLinearHeading(new Pose2d(46,-20,Math.toRadians(-90)),Math.toRadians(-90))
+//                .strafeToLinearHeading(new Vector2d(50,-17), Math.toRadians(0))
+//                .splineToLinearHeading(new Pose2d(50,-20,Math.toRadians(-90)),Math.toRadians(-90))
+                .strafeTo(new Vector2d(9,-32))
+                .strafeTo(new Vector2d(35,-35))
+                .splineToConstantHeading(new Vector2d(35,-34),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(35,-15),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(45,-15),Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(45,-45),Math.toRadians(90))
+                .splineTo(new Vector2d(43,-13),Math.toRadians(90))
+                .splineTo(new Vector2d(56,-13),Math.toRadians(-90))
+                .splineTo(new Vector2d(56, -55), Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(45,-55), Math.toRadians(-90))
+
+//
+//                .splineTo(new Vector2d(7,-32), Math.toRadians(90))
+//                .strafeToLinearHeading(new Vector2d(52,-50), Math.toRadians(90))
+//
+//                .splineToConstantHeading(new Vector2d(5,-32), Math.toRadians(90))
+//                .strafeToLinearHeading(new Vector2d(52,-50), Math.toRadians(90))
+//
+//                .splineToConstantHeading(new Vector2d(3,-32), Math.toRadians(90))
+//                .strafeToLinearHeading(new Vector2d(55,-55), Math.toRadians(90))
+
+//                //pick up block
+//                .splineTo(new Vector2d(54, -50), Math.toRadians(-90))
+//                .splineToLinearHeading(new Pose2d(40, -45, Math.toRadians(180)), Math.toRadians(180))
+//                .splineToLinearHeading(new Pose2d(3, -40, Math.toRadians(90)), Math.toRadians(90))
+//                //.stopAndAdd(pivot.pivotUp(1200))
+//
 
 //        //blue
 //        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-23, 52, Math.toRadians(-90)))

@@ -15,6 +15,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+
+import org.firstinspires.ftc.robotcore.internal.opengl.models.SavedMeshObject;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -33,7 +35,7 @@ public class RedCloseAuto extends LinearOpMode {
     private static final Pose2d STARTING_POSE = new Pose2d(12, -60, Math.toRadians(90));
 
     // Sample positions (adjust these based on your field measurements)
-    private static final Pose2d SPECIMEN_DROP = new Pose2d(9, -30, Math.toRadians(90));
+    private static final Pose2d SPECIMEN_DROP = new Pose2d(9, -32, Math.toRadians(90));
     private static final Vector2d SAMPLE_1 = new Vector2d(24, -12);
     private static final Vector2d SAMPLE_2 = new Vector2d(0, -12);
     private static final Vector2d SAMPLE_3 = new Vector2d(-24, -12);
@@ -46,6 +48,7 @@ public class RedCloseAuto extends LinearOpMode {
     private CRServo servo1 = null; //intake
     private CRServo servo2 = null;
     private Servo sWrist = null; //wrist joint
+    private Servo Sample = null;
 
     private static final int liftMax = 1000;
     private static final int liftMin = -2900;
@@ -63,65 +66,86 @@ public class RedCloseAuto extends LinearOpMode {
         servo2 = hardwareMap.get(CRServo.class, "s2");
         sWrist = hardwareMap.get(Servo.class, "sWrist");
         sWrist.setPosition(0);
+        Sample = hardwareMap.get(Servo.class, "Sample");
+        Sample.setPosition(0);
 
         Lift lift = new Lift(hardwareMap);
         Pivot pivot = new Pivot(hardwareMap);
         Intake intake = new Intake(hardwareMap);
         Wrist wrist = new Wrist(hardwareMap);
+        SampleArm sampleArm = new SampleArm(hardwareMap);
         MecanumDrive drive = new MecanumDrive(hardwareMap, STARTING_POSE);
 
         TrajectoryActionBuilder pushSamples = drive.actionBuilder(SPECIMEN_DROP)
-                .waitSeconds(5.5)
+                .waitSeconds(4.5)
                 .strafeTo(new Vector2d(9,-32))
                 .strafeTo(new Vector2d(35,-35))
                 .splineToConstantHeading(new Vector2d(35,-34),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(35,-10),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(46,-10),Math.toRadians(-90))
-                .splineToConstantHeading(new Vector2d(46,-45),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(46,-10),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(56,-10),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(56, -45), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(56,-35), Math.toRadians(90))
-                //.splineToConstantHeading(new Vector2d(54,-10), Math.toRadians(90))
-                //.splineToConstantHeading(new Vector2d(59,-10),Math.toRadians(90))
-                //.splineToConstantHeading(new Vector2d(59, -45), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(35,-15),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(45,-15),Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(45,-45),Math.toRadians(90))
+                .splineTo(new Vector2d(43,-13),Math.toRadians(90))
+                .splineTo(new Vector2d(56,-13),Math.toRadians(-90))
+                .splineTo(new Vector2d(56, -55), Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(45,-55), Math.toRadians(-90));
+//
+//                .stopAndAdd(wrist.wristUp())
+//                .stopAndAdd(pivot.pivotDown(600))
+//                .stopAndAdd(lift.liftUp(-300))
+//                .stopAndAdd(intake.intakeUp())
+//                //lift to prepare for outtake
+//                .stopAndAdd(pivot.pivotUp(800))
+//                .stopAndAdd(lift.liftUp(-2000));
 
-                //pick up block
-                .splineTo(new Vector2d(54, -50), Math.toRadians(-90))
-                .stopAndAdd(wrist.wristUp())
-                .stopAndAdd(pivot.pivotDown(350))
-                .stopAndAdd(lift.liftUp(-1400))
-                .stopAndAdd(intake.intakeUp())
-                //lift to prepare for outtake
-                .stopAndAdd(pivot.pivotUp(1200))
-                .stopAndAdd(lift.liftUp(-2000));
-
-        TrajectoryActionBuilder speciman1 = drive.actionBuilder(new Pose2d(54, -50, Math.toRadians(90)))
-                .waitSeconds(23)
-                .splineToLinearHeading(new Pose2d(40, -45, Math.toRadians(180)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(3, -40, Math.toRadians(90)), Math.toRadians(90))
-                //.stopAndAdd(pivot.pivotUp(1200))
-                .stopAndAdd(lift.liftDown(-500));
-        ;
 
         TrajectoryActionBuilder placeSpecimen = drive.actionBuilder(STARTING_POSE)
                 .strafeTo(SPECIMEN_DROP.position)
                 //wait ant put speciamskdfjas;dlfkja onto the cage
                 .waitSeconds(1)
                 .stopAndAdd(pivot.pivotDown(800))
-                .stopAndAdd(lift.liftDown(1000))
-                .stopAndAdd(intake.intakeDown());
-        //.stopAndAdd(pushSamples.build());
+                .stopAndAdd(lift.liftDown(1000));
+//                .stopAndAdd(intake.intakeDown());
 
 
-        TrajectoryActionBuilder placeSpecimen1 = drive.actionBuilder(new Pose2d(3, -40, Math.toRadians(90)))
+        TrajectoryActionBuilder placeSpecimen1 = drive.actionBuilder(new Pose2d(45, -55, Math.toRadians(90)))
                 //wait ant put speciamskdfjas;dlfkja onto the cage
                 .waitSeconds(27.5)
-                .strafeTo(new Vector2d(-6,-30))
-                .stopAndAdd(pivot.pivotDown(800))
-                .stopAndAdd(lift.liftDown(1000))
-                .stopAndAdd(intake.intakeDown());
+                .strafeTo(new Vector2d(-6,-30));
+//                .stopAndAdd(pivot.pivotDown(800))
+//                .stopAndAdd(lift.liftDown(1000))
+//                .stopAndAdd(intake.intakeDown());
         //.stopAndAdd(pushSamples.build());
+
+        TrajectoryActionBuilder speciman2 = drive.actionBuilder(new Pose2d(-6, -30, Math.toRadians(90)))
+                .waitSeconds(31.5)
+                .splineToConstantHeading(new Vector2d(45, -55), Math.toRadians(90));
+                //.stopAndAdd(pivot.pivotUp(1200))
+                //.stopAndAdd(lift.liftDown(-500));
+
+        TrajectoryActionBuilder placeSpecimen2 = drive.actionBuilder(new Pose2d(45, -55, Math.toRadians(90)))
+                //wait ant put speciamskdfjas;dlfkja onto the cage
+                .waitSeconds(35.5)
+                .strafeTo(new Vector2d(-4,-30));
+//                .stopAndAdd(pivot.pivotDown(800))
+//                .stopAndAdd(lift.liftDown(1000))
+//                .stopAndAdd(intake.intakeDown());
+        //.stopAndAdd(pushSamples.build());
+
+        TrajectoryActionBuilder speciman3 = drive.actionBuilder(new Pose2d(-4, -30, Math.toRadians(90)))
+                .waitSeconds(39.5)
+                .splineToConstantHeading(new Vector2d(45, -55), Math.toRadians(90));
+                //.stopAndAdd(pivot.pivotUp(1200))
+                //.stopAndAdd(lift.liftDown(-500));
+
+        TrajectoryActionBuilder placeSpecimen3 = drive.actionBuilder(new Pose2d(45, -55, Math.toRadians(90)))
+                //wait ant put speciamskdfjas;dlfkja onto the cage
+                .waitSeconds(43.5)
+                .strafeTo(new Vector2d(0,-30));
+//                .stopAndAdd(pivot.pivotDown(800))
+//                .stopAndAdd(lift.liftDown(1000))
+//                .stopAndAdd(intake.intakeDown());
+        //.stopAndAdd(pushSamples.build());
+
 
 
 //        TrajectoryActionBuilder park = drive.actionBuilder(SPECIMEN_DROP)
@@ -145,17 +169,15 @@ public class RedCloseAuto extends LinearOpMode {
          );**/
         Actions.runBlocking(//lift arm and move to specimen at same time
                 new ParallelAction(
-                        pivot.pivotUp(1200),
-                        lift.liftUp(-3050),
-                        //intake.intakeUp(),
-                        //lift.liftDown(),
-                        //pivot.pivotDown(),
-                        //intake.intakeDown(),
-                        //intake.intakeUp()
+                        pivot.pivotUp(800),
+                        lift.liftUp(-2200),
                         placeSpecimen.build(),
                         pushSamples.build(),
-                        speciman1.build(),
-                        placeSpecimen1.build()
+                        placeSpecimen1.build(),
+                        speciman2.build(),
+                        placeSpecimen2.build(),
+                        speciman3.build(),
+                        placeSpecimen3.build()
                 )
         );
         //Actions.runBlocking(new SequentialAction(//push samples afterward
@@ -186,11 +208,13 @@ public class RedCloseAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    rext.setPower(-0.5);
-                    lext.setPower(-0.5);
+                    rext.setPower(-1);
+                    lext.setPower(-1);
                     initialized = true;
                 }
                 double pos = lext.getCurrentPosition();
+                telemetry.addData("Status", "liftPos: " + pos);
+                telemetry.update();
                 packet.put("liftPos", pos);
                 if (pos > liftMin) {
                     return true;
@@ -213,11 +237,13 @@ public class RedCloseAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    rext.setPower(0.5);
-                    lext.setPower(0.5);
+                    rext.setPower(1);
+                    lext.setPower(1);
                     initialized = true;
                 }
                 double pos = lext.getCurrentPosition();
+                telemetry.addData("Status", "liftPos: " + pos);
+                telemetry.update();
                 packet.put("liftPos", pos);
                 if (pos < liftMax) {
                     return true;
@@ -265,6 +291,8 @@ public class RedCloseAuto extends LinearOpMode {
                     initialized = true;
                 }
                 double pos = lpivot.getCurrentPosition();
+                telemetry.addData("Status", "pivotPos: " + pos);
+                telemetry.update();
                 packet.put("pivotPos", pos);
                 if (pos < pivotMax) {
                     return true;
@@ -292,6 +320,8 @@ public class RedCloseAuto extends LinearOpMode {
                     initialized = true;
                 }
                 double pos = lpivot.getCurrentPosition();
+                telemetry.addData("Status", "pivotPos: " + pos);
+                telemetry.update();
                 packet.put("pivotPos", pos);
                 if (pos > pivotMin) {
                     return true;
@@ -327,8 +357,8 @@ public class RedCloseAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    servo1.setPower(0.5);
-                    servo2.setPower(0.5);
+                    servo1.setPower(0.9);
+                    servo2.setPower(0.9);
                     initialized = true;
                     resetRuntime();
                 }
@@ -422,6 +452,59 @@ public class RedCloseAuto extends LinearOpMode {
 
         public Action wristDown() {
             return new RedCloseAuto.Wrist.WristDown();
+        }
+    }
+    public class SampleArm {//dont know how to implement intake on and off, probably like.wait but doesn twokr
+        //unless in the runOpMode soooo idk
+
+        public SampleArm(HardwareMap hardwareMap) {
+
+            Sample.setDirection(Servo.Direction.FORWARD);
+        }
+
+        public class SampleArmUp implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    Sample.setPosition(0);
+                    initialized = true;
+                    resetRuntime();
+                }
+                if (getRuntime() < 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        public class SampleDown implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    Sample.setPosition(0.85);
+                    initialized = true;
+                    resetRuntime();
+                }
+                if (getRuntime() < 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        public Action SampleArmUp() {
+            return new SampleArm.SampleArmUp();
+        }
+
+        public Action SampleArmDown() {
+
+            return new SampleArm.SampleDown();
         }
     }
 }

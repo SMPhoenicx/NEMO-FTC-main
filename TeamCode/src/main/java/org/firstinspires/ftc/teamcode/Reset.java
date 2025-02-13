@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -19,44 +20,25 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
 
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 @Config
-@Autonomous(name = "Red Far Auto")
-public class RedFarAuto extends LinearOpMode {
+@Autonomous(name = "Reset")
+public class Reset extends LinearOpMode {
+    // Define your robot's starting position
     private static final Pose2d zeroPose = new Pose2d(0, 0, 0);
-
     private static final Vector2d px = new Vector2d(20, 0);
-
     private static final Vector2d py = new Vector2d(0, 20);
-
-    private static final Pose2d STARTING_POSE = new Pose2d(-12, -60, Math.toRadians(90));
-
+    private static final Pose2d STARTING_POSE = new Pose2d(12, -60, Math.toRadians(90));
 
     // Sample positions (adjust these based on your field measurements)
-
-    private static final Pose2d SPECIMEN_DROP = new Pose2d(-9, -28, Math.toRadians(90));
-
-    private static final Vector2d SAMPLE_1 = new Vector2d(-48, -40);
-
-    private static final Vector2d SAMPLE_2 = new Vector2d(-58, -40);
-
-    private static final Vector2d SAMPLE_3 = new Vector2d(-68, -40);
-
-    private static final Vector2d BUCKET_POS = new Vector2d(-48, -50);
-
-    private static final Vector2d PARK_POS = new Vector2d(-20, 0);
-
+    private static final Pose2d SPECIMEN_DROP = new Pose2d(9, -30, Math.toRadians(90));
+    private static final Vector2d SAMPLE_1 = new Vector2d(24, -12);
+    private static final Vector2d SAMPLE_2 = new Vector2d(0, -12);
+    private static final Vector2d SAMPLE_3 = new Vector2d(-24, -12);
+    private static final Vector2d BUCKET_POS = new Vector2d(0, -48);
+    private static final Vector2d PARK_POS = new Vector2d(55, -55);
     private DcMotor rext = null;//ext are extension
     private DcMotor lext = null;
     private DcMotor rpivot = null; //pivot arm up and down
@@ -64,11 +46,12 @@ public class RedFarAuto extends LinearOpMode {
     private CRServo servo1 = null; //intake
     private CRServo servo2 = null;
     private Servo sWrist = null; //wrist joint
-
-    private static final int liftMax = 1100;
-    private static final int liftMin = -3000;
-    private static final int pivotMax = 1000;
+    private Servo Sample = null;
+    private static final int liftMax = 1000;
+    private static final int liftMin = -2900;
+    private static final int pivotMax = 1100;
     private static final int pivotMin = 800;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -79,91 +62,53 @@ public class RedFarAuto extends LinearOpMode {
         servo1 = hardwareMap.get(CRServo.class, "s1");
         servo2 = hardwareMap.get(CRServo.class, "s2");
         sWrist = hardwareMap.get(Servo.class, "sWrist");
-        sWrist.setPosition(0);
+//        sWrist.setPosition(0);
+        Sample = hardwareMap.get(Servo.class, "Sample");
+        Sample.setPosition(0);
 
         Lift lift = new Lift(hardwareMap);
         Pivot pivot = new Pivot(hardwareMap);
         Intake intake = new Intake(hardwareMap);
         Wrist wrist = new Wrist(hardwareMap);
+        SampleArm sampleArm = new SampleArm(hardwareMap);
         MecanumDrive drive = new MecanumDrive(hardwareMap, STARTING_POSE);
 
-        TrajectoryActionBuilder autoSequence = drive.actionBuilder(SPECIMEN_DROP)
-                .waitSeconds(4.5)
+//        TrajectoryActionBuilder park = drive.actionBuilder(SPECIMEN_DROP)
 //
-//                 Move to specimen drop
+//                .waitSeconds(5)
+//                .strafeTo(new Vector2d(9, -55))
+//
+//                .strafeTo(PARK_POS);
 
 
-                // Move to first sample
-
-                .strafeTo(SAMPLE_1)
-
-                .stopAndAdd(pivot.pivotDown(0))
-                .stopAndAdd(lift.liftDown(0))
-                .stopAndAdd(intake.intakeDown())
-
-                // Move to bucket
-
-                .lineToYLinearHeading(-50, Math.toRadians(225))
-
-                .waitSeconds(0.5)  // Time for outtake
-
-
-                // Move to second sample.
-                .strafeToLinearHeading(SAMPLE_2, Math.toRadians(90))
-                //.turn(Math.toRadians(225))//turn this into .lineToLinearHeading(SAMPLE_2, Math.toRadians(225)
-
-                //I cant because .lineToLinearHeading isn't showing up for me
-
-                //.strafeTo(SAMPLE_2)
-
-                .waitSeconds(0.5)  // Time for intake
-
-                //
-
-                // Back to bucket
-
-                .strafeToLinearHeading(BUCKET_POS, Math.toRadians(225))//turn this into .lineToLinearHeading(BUCKET_POS, Math.toRadians(225)
-
-                //I cant because .lineToLinearHeading isn't showing up for me
-
-                //.turn(Math.toRadians(135))
-
-                .waitSeconds(0.5)  // Time for outtake
-
-                .strafeToLinearHeading(new Vector2d(-36, -63), Math.toRadians(90));
-
-        TrajectoryActionBuilder placeSpecimen = drive.actionBuilder(STARTING_POSE)
-                .strafeTo(SPECIMEN_DROP.position)
-                //wait ant put speciamskdfjas;dlfkja onto the cage
-                .waitSeconds(2)
-                .stopAndAdd(pivot.pivotDown(800))
-                .stopAndAdd(lift.liftDown(1000))
-                .stopAndAdd(intake.intakeDown())
-                .strafeTo(STARTING_POSE.position);
-        //.stopAndAdd(pushSamples.build());
-
-        TrajectoryActionBuilder park = drive.actionBuilder(SPECIMEN_DROP)
-
-                .waitSeconds(5)
-                .turn(Math.toRadians(-90))
-                .strafeTo(new Vector2d(-50, -20))
-                .strafeTo(new Vector2d(-20, 0));
         waitForStart();
 
         if (isStopRequested()) return;
 
         // TODO: Set lift to specimen height
         //Actions.runBlocking(autoSequence);
-        Actions.runBlocking(
+        /**Actions.runBlocking(
+         new SequentialAction(
+         autoSequence.build()
+         )
+         );**/
+        Actions.runBlocking(//lift arm and move to specimen at same time
                 new ParallelAction(
-                        pivot.pivotUp(800),
-                        lift.liftUp(-2200),
-                        placeSpecimen.build(),
-                        autoSequence.build()
+                        //sampleArm.SampleArmDown()
+//                        pivot.pivotUp(1000),
+//                        lift.liftDown(100),
+//                        //intake.intakeUp(),
+//                        //lift.liftDown(),
+//                        pivot.pivotDown(500)
+//                        //intake.intakeDown(),
+//                        //intake.intakeUp()
                 )
         );
-        // Throughout the sequence, you'll need to add your intake/lift controls
-        // at the appropriate times
+        Actions.runBlocking(new SequentialAction(//push samples afterward
+                pivot.pivotUp(1000),
+                lift.liftDown(500),
+                pivot.pivotDown(800)
+        ));
     }
 
     public class Lift {
@@ -188,13 +133,11 @@ public class RedFarAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    rext.setPower(-0.7);
-                    lext.setPower(-0.7);
+                    rext.setPower(-0.9);
+                    lext.setPower(-0.9);
                     initialized = true;
                 }
                 double pos = lext.getCurrentPosition();
-                telemetry.addData("Status", "liftPos: " + pos);
-                telemetry.update();
                 packet.put("liftPos", pos);
                 if (pos > liftMin) {
                     return true;
@@ -217,13 +160,11 @@ public class RedFarAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    rext.setPower(0.7);
-                    lext.setPower(0.7);
+                    rext.setPower(0.9);
+                    lext.setPower(0.9);
                     initialized = true;
                 }
                 double pos = lext.getCurrentPosition();
-                telemetry.addData("Status", "liftPos: " + pos);
-                telemetry.update();
                 packet.put("liftPos", pos);
                 if (pos < liftMax) {
                     return true;
@@ -266,12 +207,13 @@ public class RedFarAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    rpivot.setPower(0.7);
-                    lpivot.setPower(0.7);
+                    rpivot.setPower(1);
+                    lpivot.setPower(1);
                     initialized = true;
                 }
+
                 double pos = lpivot.getCurrentPosition();
-                telemetry.addData("Pivot", "pivotPos: " + pos);
+                telemetry.addData("Status", "pivotPos: " + pos);
                 telemetry.update();
                 packet.put("pivotPos", pos);
                 if (pos < pivotMax) {
@@ -295,12 +237,12 @@ public class RedFarAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    rpivot.setPower(-0.7);
-                    lpivot.setPower(-0.7);
+                    rpivot.setPower(-1);
+                    lpivot.setPower(-1);
                     initialized = true;
                 }
                 double pos = lpivot.getCurrentPosition();
-                telemetry.addData("Pivot", "pivotPos: " + pos);
+                telemetry.addData("Status", "pivotPos: " + pos);
                 telemetry.update();
                 packet.put("pivotPos", pos);
                 if (pos > pivotMin) {
@@ -337,8 +279,8 @@ public class RedFarAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    servo1.setPower(0.7);
-                    servo2.setPower(0.7);
+                    servo1.setPower(0.9);
+                    servo2.setPower(0.9);
                     initialized = true;
                     resetRuntime();
                 }
@@ -358,8 +300,8 @@ public class RedFarAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    servo1.setPower(-0.7);
-                    servo2.setPower(-0.7);
+                    servo1.setPower(-1);
+                    servo2.setPower(-1);
                     initialized = true;
                     resetRuntime();
                 }
@@ -427,11 +369,64 @@ public class RedFarAuto extends LinearOpMode {
         }
 
         public Action wristUp() {
-            return new Wrist.WristUp();
+            return new Reset.Wrist.WristUp();
         }
 
         public Action wristDown() {
-            return new Wrist.WristDown();
+            return new Reset.Wrist.WristDown();
+        }
+    }
+    public class SampleArm {//dont know how to implement intake on and off, probably like.wait but doesn twokr
+        //unless in the runOpMode soooo idk
+
+        public SampleArm(HardwareMap hardwareMap) {
+
+            Sample.setDirection(Servo.Direction.FORWARD);
+        }
+
+        public class SampleArmUp implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    Sample.setPosition(0);
+                    initialized = true;
+                    resetRuntime();
+                }
+                if (getRuntime() < 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        public class SampleDown implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    Sample.setPosition(0.85);
+                    initialized = true;
+                    resetRuntime();
+                }
+                if (getRuntime() < 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        public Action SampleArmUp() {
+            return new SampleArm.SampleArmUp();
+        }
+
+        public Action SampleArmDown() {
+
+            return new SampleArm.SampleDown();
         }
     }
 }
